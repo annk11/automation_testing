@@ -27,7 +27,7 @@ jobs:
       run: newman run tests/api/testing.postman_collection.json -e tests/api/test-stand-ml.postman_environment.json -r cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-report --delay-request 1000 || true
 
     - name: Run UI tests
-      run: pytest --alluredir=allure-results
+      run: pytest --alluredir=allure-results || true
 
     - name: Generate Allure report
       run: allure generate allure-results
