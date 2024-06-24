@@ -19,8 +19,9 @@ jobs:
         node-version: '16'
 
     - name: Install dependencies
-      run: npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-allure
-           pip install pytest pytest-allure-adaptor
+      run: |
+        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-allure
+        pip install pytest pytest-allure-adaptor
 
     - name: Run Postman tests
       run: newman run tests/api/testing.postman_collection.json -e tests/api/test-stand-ml.postman_environment.json -r cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-report --delay-request 1000 || true
