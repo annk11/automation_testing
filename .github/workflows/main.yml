@@ -30,8 +30,8 @@ jobs:
       run: pytest --alluredir=allure-results || true
 
     - name: Generate Allure report
-      run: allure generate allure-results
+      run: allure generate allure-results || true
 
     - name: Send email notification
       run: |
-        echo "Hello,\n\nThe Allure report is ready. You can access it here: file://$GITHUB_WORKSPACE/allure-report/index.html" | mail -s "Allure Report Notification" anastasianuk@yandex.ru
+        echo "Hello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | mail -s "Allure Report Notification" anastasianuk@yandex.ru
