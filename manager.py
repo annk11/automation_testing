@@ -30,32 +30,17 @@ def create_message(message):
     json_file = glob.glob(os.path.join(report_path, f'*{half_name}*.json'))  # json file name
     latest_json_file = max(json_file, key=os.path.getctime)  # fresh json file
 
-    # Parsing json and create chart
+    # Parsing json
     with open(latest_json_file, 'r') as file:
         data = json.load(file)
     total = data["run"]["stats"]["assertions"]["total"]
     failed = data["run"]["stats"]["assertions"]["failed"]
-    labels = ["total", "failed"]
-    values = [total, failed]
-    colors = ['#60c464', '#ff7575']
-    plt.bar(labels, values, color=colors, alpha=0.6)
-    plt.xlabel("Assertions", fontsize=10, fontweight='bold')
-    plt.ylabel("Count", fontsize=10, fontweight='bold')
-    plt.title(f"Test results\n Total tests: {total}, Failed tests: {failed}")
-    plt.savefig('result_chart.png')
 
-    # Read attachment file
-    with open('result_chart.png', 'rb') as file:
-        attachment_file = file.read()
-
-    # Message generation
-    message += "<img src='data:image/png;base64," + base64.b64encode(attachment_file).decode('utf-8') + "'>"
-    message += html
     return message
 
 # Path to Postman collection/environment
-postman_collection = "testing.postman_collection.json"
-postman_environment = "test-stand-ml.postman_environment.json"
+postman_collection = "tests/api/testing.postman_collection.json"
+postman_environment = "tests/api/test-stand-ml.postman_environment.json"
 
 # Path to save report
 report_path = "."
@@ -63,10 +48,12 @@ report_path = "."
 # Command text
 cmd = f"newman run {postman_collection} -e {postman_environment} -r cli,html,json, allure --reporter-html-export " \
       f"{report_path} --reporter-json-export {report_path} --reporter-allure-export {report_path} --delay-request 1000"
+cmd_allure = "allure generate allure-results"
 
 process = os.system(cmd)
 
 if process == 0:
+    process_allure = os.system(cmd_allure)
     timezone = pytz.timezone('Europe/Moscow')
     current_time = datetime.now()
     report_time = current_time.astimezone(timezone).strftime("%d.%m.%Y %H:%M")
@@ -82,13 +69,16 @@ if process == 0:
         </style>
     </head>
     <body>
-        <p class="bold-green-text">Collections run completed at {report_time}. All tests passed successfully!</p>
+        <p class="bold-green-text">Collections run completed at {report_time}. 
+        All tests passed successfully!</p>
+        <p>More information: https://annk11.github.io/automation_testing/</p>
     </body>
     </html>
     """
     message = create_message(html_text)
     send_notification({'nikia@omegafuture.ru'}, message)
 else:
+    process_allure = os.system(cmd_allure)
     timezone = pytz.timezone('Europe/Moscow')
     current_time = datetime.now()
     report_time = current_time.astimezone(timezone).strftime("%d.%m.%Y %H:%M")
@@ -104,7 +94,9 @@ else:
             </style>
         </head>
         <body>
-            <p class="bold-red-text">Collections run completed at {report_time}. An error occurred while executing tests.</p>
+            <p class="bold-red-text">Collections run completed at {report_time}. 
+            An error occurred while executing tests.</p>
+            <p>More information: https://annk11.github.io/automation_testing/</p>
         </body>
         </html>
     """
