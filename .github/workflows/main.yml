@@ -1,0 +1,35 @@
+name: Run Tests and Notify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_tests_and_notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install -g newman @wdio/cli allure-commandline
+
+    - name: Run Postman tests
+      run: newman run ${{ secrets.POSTMAN_COLLECTION }} -e ${{ secrets.POSTMAN_ENVIRONMENT }} -r cli,html,json,allure --reporter-html-export ${{ secrets.REPORT_PATH }} --reporter-json-export ${{ secrets.REPORT_PATH }} --reporter-allure-export ${{ secrets.REPORT_PATH }} --delay-request 1000
+
+    - name: Run UI tests
+      run: pytest --alluredir=allure-results
+
+    - name: Generate Allure report
+      run: allure generate allure-results
+
+    - name: Send email notification
+      run: |
+        echo "Hello,\n\nThe Allure report is ready. You can access it here: file://$GITHUB_WORKSPACE/allure-report/index.html" | mail -s "Allure Report Notification" anastasianuk@yandex.ru
