@@ -33,5 +33,7 @@ jobs:
       run: allure generate allure-results || true
 
     - name: Send email notification
+      env:
+        SENDGRID_API_KEY: CBWXFRP7HXUQDXHYQNHZ5R56
       run: |
-        echo "Hello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | mail -s "Allure Report Notification" anastasianuk@yandex.ru
+        echo "To: anastasianuk@yandex.ru\nSubject: Allure Report Notification\n\nHello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | curl -s --request POST --url 'https://api.sendgrid.com/v3/mail/send' --header 'Authorization: Bearer CBWXFRP7HXUQDXHYQNHZ5R56' --header 'Content-Type: application/json' --data-binary @-
