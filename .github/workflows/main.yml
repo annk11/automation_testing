@@ -22,7 +22,7 @@ jobs:
       run: npm install -g newman @wdio/cli allure-commandline
 
     - name: Run Postman tests
-      run: newman run ${{ secrets.POSTMAN_COLLECTION }} -e ${{ secrets.POSTMAN_ENVIRONMENT }} -r cli,html,json,allure --reporter-html-export ${{ secrets.REPORT_PATH }} --reporter-json-export ${{ secrets.REPORT_PATH }} --reporter-allure-export ${{ secrets.REPORT_PATH }} --delay-request 1000
+      run: newman run ${{ env.POSTMAN_COLLECTION }} -e ${{ env.POSTMAN_ENVIRONMENT }} -r cli,html,json,allure --reporter-html-export ${{ env.REPORT_PATH }} --reporter-json-export ${{ env.REPORT_PATH }} --reporter-allure-export ${{ env.REPORT_PATH }} --delay-request 1000
 
     - name: Run UI tests
       run: pytest --alluredir=allure-results
