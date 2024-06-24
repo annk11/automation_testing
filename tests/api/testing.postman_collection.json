@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "75b1aeb6-97c8-4581-84d9-c27b9e0a298e",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30928254"
+	},
+	"item": [
+		{
+			"name": "Scenario 2: End-to-end (DL) Copy",
+			"item": [
+				{
+					"name": "Create experiment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"         pm.response.to.have.status(201)\r",
+									"     });\r",
+									"\r",
+									"pm.test(\"Body contains string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+									"\r",
+									"\r",
+									"//Vizualize response\r",
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Description</th>\r",
+									"        <th>GUID</th>\r",
+									"        <th>Created</th>\r",
+									"        <th>Updated</th>\r",
+									"        <th>User GUID</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>SSO ID</th>\r",
+									"        <th>First Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Short Name</th>\r",
+									"        <th>Schema</th>\r",
+									"        <th>Presentation Name</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.description}}</td>\r",
+									"        <td>{{response.guid}}</td>\r",
+									"        <td>{{response.created}}</td>\r",
+									"        <td>{{response.updated}}</td>\r",
+									"        <td>{{response.user.guid}}</td>\r",
+									"        <td>{{response.user.email}}</td>\r",
+									"        <td>{{response.user.sso_id}}</td>\r",
+									"        <td>{{response.user.first_name}}</td>\r",
+									"        <td>{{response.user.last_name}}</td>\r",
+									"        <td>{{response.user.short_name}}</td>\r",
+									"        <td>{{response.schema}}</td>\r",
+									"        <td>{{response.presentation_name}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create model in experiment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+									"\r",
+									"\r",
+									"//Vizualize response\r",
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Description</th>\r",
+									"        <th>GUID</th>\r",
+									"        <th>Created</th>\r",
+									"        <th>Updated</th>\r",
+									"        <th>User GUID</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>SSO ID</th>\r",
+									"        <th>First Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Short Name</th>\r",
+									"        <th>Schema</th>\r",
+									"        <th>Presentation Name</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.description}}</td>\r",
+									"        <td>{{response.guid}}</td>\r",
+									"        <td>{{response.created}}</td>\r",
+									"        <td>{{response.updated}}</td>\r",
+									"        <td>{{response.user.guid}}</td>\r",
+									"        <td>{{response.user.email}}</td>\r",
+									"        <td>{{response.user.sso_id}}</td>\r",
+									"        <td>{{response.user.first_name}}</td>\r",
+									"        <td>{{response.user.last_name}}</td>\r",
+									"        <td>{{response.user.short_name}}</td>\r",
+									"        <td>{{response.schema}}</td>\r",
+									"        <td>{{response.presentation_name}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/models",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"models"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete model",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/models/{{modelGuid}}",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"models",
+								"{{modelGuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete experiment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments/{{experimentGuid}}",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments",
+								"{{experimentGuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment"
+		}
+	]
+}
