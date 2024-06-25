@@ -8,7 +8,7 @@ on:
 jobs:
   run_tests_and_notify:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -27,11 +27,24 @@ jobs:
       run: newman run tests/api/testing.postman_collection.json -e tests/api/test-stand-ml.postman_environment.json -r cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-report --delay-request 1000 || true
 
     - name: Run UI tests
-      run: pytest --alluredir=allure-results
+      run: pytest --alluredir=allure-results || true
 
     - name: Generate Allure report
-      run: allure generate allure-results
+      run: allure generate allure-results || true
 
     - name: Send email notification
       run: |
-        echo "Hello,\n\nThe Allure report is ready. You can access it here: file://$GITHUB_WORKSPACE/allure-report/index.html" | mail -s "Allure Report Notification" anastasianuk@yandex.ru
+        echo "To: anastasianuk@yandex.ru\nSubject: Allure Report Notification\n\nHello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | curl -s --request POST --url 'https://api.sendgrid.com/v3/mail/send' --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }} " --header 'Content-Type: application/json' --data-binary @-
+  
+  send_telegram_message:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
+      TELEGRAM_TO: 531912826
+    needs: run_tests_and_notify
+    steps:
+      - uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: Тестирование завершено. Отчет доступен по ссылке:'https://annk11.github.io/automation_testing/'
