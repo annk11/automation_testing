@@ -41,11 +41,10 @@ jobs:
     env:
       TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
       TELEGRAM_TO: 531912826
-      ALLURE_REPORT: https://annk11.github.io/automation_testing/
     needs: run_tests_and_notify
     steps:
       - uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Тестирование завершено. Отчет доступен по ссылке:${{ secrets.ALLURE_REPORT }}
+          message: Тестирование завершено. Отчет доступен по ссылке:'https://annk11.github.io/automation_testing/'
