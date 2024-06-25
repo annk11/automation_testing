@@ -36,15 +36,16 @@ jobs:
       run: |
         echo "To: anastasianuk@yandex.ru\nSubject: Allure Report Notification\n\nHello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | curl -s --request POST --url 'https://api.sendgrid.com/v3/mail/send' --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }} " --header 'Content-Type: application/json' --data-binary @-
   
-  send_message:
+  send_telegram_message:
     runs-on: ubuntu-latest
     env:
       TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
       TELEGRAM_TO: 531912826
+      ALLURE_REPORT: https://annk11.github.io/automation_testing/
     needs: run_tests_and_notify
     steps:
       - uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Deployment of Projekt-app is successful!
+          message: Тестирование завершено. Отчет доступен по ссылке:${{ secrets.ALLURE_REPORT }}
