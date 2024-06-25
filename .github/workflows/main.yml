@@ -30,7 +30,7 @@ jobs:
       run: pytest --alluredir=allure-results || true
 
     - name: Generate Allure report
-      run: allure generate allure-results || true
+      run: allure generate allure-results --clean || true
 
     - name: Send email notification
       run: |
@@ -47,4 +47,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Тестирование завершено. Отчет доступен по ссылке:'https://annk11.github.io/automation_testing/'
+          message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
