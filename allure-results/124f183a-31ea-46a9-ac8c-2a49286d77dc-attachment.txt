@@ -1,0 +1,5 @@
+{
+    "description": "{{randomString}}",
+    "schema": "{{experimentSchema}}",
+    "presentation_name": "{{randomString}}"
+}

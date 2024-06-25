@@ -1,0 +1,59 @@
+pm.test("Status code is 201", function () {
+    pm.response.to.have.status(201);
+});
+
+pm.test("Body contains string", function () {
+    pm.expect(pm.response.text()).to.include("guid")
+});
+
+var jsonData = pm.response.json();
+     pm.collectionVariables.set("modelGuid", jsonData.guid);
+
+
+//Vizualize response
+var template = `
+<style type="text/css">
+    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}
+    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}
+    .tftable tr {background-color:#ffffff;}
+    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}
+    .tftable tr:hover {background-color:#e0ffff;}
+</style>
+
+<table class="tftable" border="1">
+    <tr>
+        <th>Description</th>
+        <th>GUID</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>User GUID</th>
+        <th>Email</th>
+        <th>SSO ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Short Name</th>
+        <th>Schema</th>
+        <th>Presentation Name</th>
+    </tr>
+    <tr>
+        <td>{{response.description}}</td>
+        <td>{{response.guid}}</td>
+        <td>{{response.created}}</td>
+        <td>{{response.updated}}</td>
+        <td>{{response.user.guid}}</td>
+        <td>{{response.user.email}}</td>
+        <td>{{response.user.sso_id}}</td>
+        <td>{{response.user.first_name}}</td>
+        <td>{{response.user.last_name}}</td>
+        <td>{{response.user.short_name}}</td>
+        <td>{{response.schema}}</td>
+        <td>{{response.presentation_name}}</td>
+    </tr>
+</table>
+`;
+
+function constructVisualizerPayload() {
+    return { response: pm.response.json() }
+}
+
+pm.visualizer.set(template, constructVisualizerPayload());

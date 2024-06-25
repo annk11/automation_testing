@@ -1,0 +1,9 @@
+{
+    "User-Agent": "PostmanRuntime/7.37.1",
+    "Accept": "*/*",
+    "Cache-Control": "no-cache",
+    "Postman-Token": "51b36db5-451d-4c59-a0d8-4fade8b05c2f",
+    "Host": "bi-tst-01:8081",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive"
+}

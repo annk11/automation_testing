@@ -1,0 +1,4928 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "75b1aeb6-97c8-4581-84d9-c27b9e0a298e",
+      "exporter_id": "30928254"
+    },
+    "item": [
+      {
+        "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+        "name": "Scenario 2: End-to-end (DL) Copy",
+        "description": {
+          "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+          "type": "text/plain"
+        },
+        "item": [
+          {
+            "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+            "name": "Create experiment",
+            "request": {
+              "url": {
+                "protocol": "http",
+                "path": [
+                  "service-ml-middleware",
+                  "api",
+                  "experiments"
+                ],
+                "host": [
+                  "{{GATEWAY_URL}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 201\", function () {\r",
+                    "         pm.response.to.have.status(201)\r",
+                    "     });\r",
+                    "\r",
+                    "pm.test(\"Body contains string\", function () {\r",
+                    "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                    "});\r",
+                    "\r",
+                    "var jsonData = pm.response.json();\r",
+                    "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                    "\r",
+                    "\r",
+                    "//Vizualize response\r",
+                    "var template = `\r",
+                    "<style type=\"text/css\">\r",
+                    "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                    "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                    "    .tftable tr {background-color:#ffffff;}\r",
+                    "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                    "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                    "</style>\r",
+                    "\r",
+                    "<table class=\"tftable\" border=\"1\">\r",
+                    "    <tr>\r",
+                    "        <th>Description</th>\r",
+                    "        <th>GUID</th>\r",
+                    "        <th>Created</th>\r",
+                    "        <th>Updated</th>\r",
+                    "        <th>User GUID</th>\r",
+                    "        <th>Email</th>\r",
+                    "        <th>SSO ID</th>\r",
+                    "        <th>First Name</th>\r",
+                    "        <th>Last Name</th>\r",
+                    "        <th>Short Name</th>\r",
+                    "        <th>Schema</th>\r",
+                    "        <th>Presentation Name</th>\r",
+                    "    </tr>\r",
+                    "    <tr>\r",
+                    "        <td>{{response.description}}</td>\r",
+                    "        <td>{{response.guid}}</td>\r",
+                    "        <td>{{response.created}}</td>\r",
+                    "        <td>{{response.updated}}</td>\r",
+                    "        <td>{{response.user.guid}}</td>\r",
+                    "        <td>{{response.user.email}}</td>\r",
+                    "        <td>{{response.user.sso_id}}</td>\r",
+                    "        <td>{{response.user.first_name}}</td>\r",
+                    "        <td>{{response.user.last_name}}</td>\r",
+                    "        <td>{{response.user.short_name}}</td>\r",
+                    "        <td>{{response.schema}}</td>\r",
+                    "        <td>{{response.presentation_name}}</td>\r",
+                    "    </tr>\r",
+                    "</table>\r",
+                    "`;\r",
+                    "\r",
+                    "function constructVisualizerPayload() {\r",
+                    "    return { response: pm.response.json() }\r",
+                    "}\r",
+                    "\r",
+                    "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                    ""
+                  ],
+                  "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                }
+              },
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    ""
+                  ],
+                  "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                }
+              }
+            ]
+          },
+          {
+            "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+            "name": "Create model in experiment",
+            "request": {
+              "url": {
+                "protocol": "http",
+                "path": [
+                  "service-ml-middleware",
+                  "api",
+                  "models"
+                ],
+                "host": [
+                  "{{GATEWAY_URL}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 201\", function () {\r",
+                    "    pm.response.to.have.status(201);\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Body contains string\", function () {\r",
+                    "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                    "});\r",
+                    "\r",
+                    "var jsonData = pm.response.json();\r",
+                    "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                    "\r",
+                    "\r",
+                    "//Vizualize response\r",
+                    "var template = `\r",
+                    "<style type=\"text/css\">\r",
+                    "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                    "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                    "    .tftable tr {background-color:#ffffff;}\r",
+                    "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                    "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                    "</style>\r",
+                    "\r",
+                    "<table class=\"tftable\" border=\"1\">\r",
+                    "    <tr>\r",
+                    "        <th>Description</th>\r",
+                    "        <th>GUID</th>\r",
+                    "        <th>Created</th>\r",
+                    "        <th>Updated</th>\r",
+                    "        <th>User GUID</th>\r",
+                    "        <th>Email</th>\r",
+                    "        <th>SSO ID</th>\r",
+                    "        <th>First Name</th>\r",
+                    "        <th>Last Name</th>\r",
+                    "        <th>Short Name</th>\r",
+                    "        <th>Schema</th>\r",
+                    "        <th>Presentation Name</th>\r",
+                    "    </tr>\r",
+                    "    <tr>\r",
+                    "        <td>{{response.description}}</td>\r",
+                    "        <td>{{response.guid}}</td>\r",
+                    "        <td>{{response.created}}</td>\r",
+                    "        <td>{{response.updated}}</td>\r",
+                    "        <td>{{response.user.guid}}</td>\r",
+                    "        <td>{{response.user.email}}</td>\r",
+                    "        <td>{{response.user.sso_id}}</td>\r",
+                    "        <td>{{response.user.first_name}}</td>\r",
+                    "        <td>{{response.user.last_name}}</td>\r",
+                    "        <td>{{response.user.short_name}}</td>\r",
+                    "        <td>{{response.schema}}</td>\r",
+                    "        <td>{{response.presentation_name}}</td>\r",
+                    "    </tr>\r",
+                    "</table>\r",
+                    "`;\r",
+                    "\r",
+                    "function constructVisualizerPayload() {\r",
+                    "    return { response: pm.response.json() }\r",
+                    "}\r",
+                    "\r",
+                    "pm.visualizer.set(template, constructVisualizerPayload());"
+                  ],
+                  "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+            "name": "Delete model",
+            "request": {
+              "url": {
+                "protocol": "http",
+                "path": [
+                  "service-ml-middleware",
+                  "api",
+                  "models",
+                  "{{modelGuid}}"
+                ],
+                "host": [
+                  "{{GATEWAY_URL}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "DELETE",
+              "body": {
+                "mode": "raw",
+                "raw": "",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                }
+              }
+            ]
+          },
+          {
+            "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+            "name": "Delete experiment",
+            "request": {
+              "url": {
+                "protocol": "http",
+                "path": [
+                  "service-ml-middleware",
+                  "api",
+                  "experiments",
+                  "{{experimentGuid}}"
+                ],
+                "host": [
+                  "{{GATEWAY_URL}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "method": "DELETE",
+              "body": {
+                "mode": "raw",
+                "raw": "",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "75b1aeb6-97c8-4581-84d9-c27b9e0a298e",
+      "name": "New Collection",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2024-06-24T14:39:20.787Z",
+      "postman_exported_using": "Postman/11.2.13"
+    },
+    "id": "7a235d7a-5d10-48b1-9c3c-ed2ec86fb75b",
+    "name": "test-stand/ml",
+    "values": [
+      {
+        "type": "any",
+        "value": "bi-tst-01:8081",
+        "key": "GATEWAY_URL"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "token"
+      }
+    ]
+  },
+  "globals": {
+    "id": "c9bb7d34-f8ad-42de-aa2c-bda7912e7506",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 6,
+        "pending": 0,
+        "failed": 6
+      },
+      "testScripts": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 60.25,
+      "responseMin": 19,
+      "responseMax": 175,
+      "responseSd": 66.29998114630199,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1719261106081,
+      "completed": 1719261110831
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 4,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "c80a741f-de79-4165-99bf-b63f15fb3d0c",
+          "httpRequestId": "75c73975-92ca-4d6a-93ce-45e19388f50c"
+        },
+        "item": {
+          "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+          "name": "Create experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "experiments"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "         pm.response.to.have.status(201)\r",
+                  "     });\r",
+                  "\r",
+                  "pm.test(\"Body contains string\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                  "\r",
+                  "\r",
+                  "//Vizualize response\r",
+                  "var template = `\r",
+                  "<style type=\"text/css\">\r",
+                  "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                  "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                  "    .tftable tr {background-color:#ffffff;}\r",
+                  "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                  "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                  "</style>\r",
+                  "\r",
+                  "<table class=\"tftable\" border=\"1\">\r",
+                  "    <tr>\r",
+                  "        <th>Description</th>\r",
+                  "        <th>GUID</th>\r",
+                  "        <th>Created</th>\r",
+                  "        <th>Updated</th>\r",
+                  "        <th>User GUID</th>\r",
+                  "        <th>Email</th>\r",
+                  "        <th>SSO ID</th>\r",
+                  "        <th>First Name</th>\r",
+                  "        <th>Last Name</th>\r",
+                  "        <th>Short Name</th>\r",
+                  "        <th>Schema</th>\r",
+                  "        <th>Presentation Name</th>\r",
+                  "    </tr>\r",
+                  "    <tr>\r",
+                  "        <td>{{response.description}}</td>\r",
+                  "        <td>{{response.guid}}</td>\r",
+                  "        <td>{{response.created}}</td>\r",
+                  "        <td>{{response.updated}}</td>\r",
+                  "        <td>{{response.user.guid}}</td>\r",
+                  "        <td>{{response.user.email}}</td>\r",
+                  "        <td>{{response.user.sso_id}}</td>\r",
+                  "        <td>{{response.user.first_name}}</td>\r",
+                  "        <td>{{response.user.last_name}}</td>\r",
+                  "        <td>{{response.user.short_name}}</td>\r",
+                  "        <td>{{response.schema}}</td>\r",
+                  "        <td>{{response.presentation_name}}</td>\r",
+                  "    </tr>\r",
+                  "</table>\r",
+                  "`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    return { response: pm.response.json() }\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                  ""
+                ],
+                "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8081",
+            "path": [
+              "service-ml-middleware",
+              "api",
+              "experiments"
+            ],
+            "host": [
+              "bi-tst-01"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d6ba7e3e-2011-4a97-9771-24b8c2aa33d2",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "bi-tst-01:8081",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "128",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "8c40ac7c-6f2b-43d4-94c0-e0c5d45131b7",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 24 Jun 2024 20:31:47 GMT"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              52,
+              45,
+              48,
+              54,
+              45,
+              50,
+              52,
+              84,
+              50,
+              48,
+              58,
+              51,
+              49,
+              58,
+              52,
+              55,
+              46,
+              56,
+              56,
+              51,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              52,
+              48,
+              49,
+              44,
+              34,
+              112,
+              97,
+              116,
+              104,
+              34,
+              58,
+              34,
+              47,
+              115,
+              101,
+              114,
+              118,
+              105,
+              99,
+              101,
+              45,
+              109,
+              108,
+              45,
+              109,
+              105,
+              100,
+              100,
+              108,
+              101,
+              119,
+              97,
+              114,
+              101,
+              47,
+              97,
+              112,
+              105,
+              47,
+              101,
+              120,
+              112,
+              101,
+              114,
+              105,
+              109,
+              101,
+              110,
+              116,
+              115,
+              34,
+              44,
+              34,
+              104,
+              116,
+              116,
+              112,
+              95,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              85,
+              78,
+              65,
+              85,
+              84,
+              72,
+              79,
+              82,
+              73,
+              90,
+              69,
+              68,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              95,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              70,
+              117,
+              108,
+              108,
+              32,
+              97,
+              117,
+              116,
+              104,
+              101,
+              110,
+              116,
+              105,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              32,
+              105,
+              115,
+              32,
+              114,
+              101,
+              113,
+              117,
+              105,
+              114,
+              101,
+              100,
+              32,
+              116,
+              111,
+              32,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              32,
+              116,
+              104,
+              105,
+              115,
+              32,
+              114,
+              101,
+              115,
+              111,
+              117,
+              114,
+              99,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 175,
+          "responseSize": 203
+        },
+        "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 201",
+              "message": "expected response to have status code 201 but got 401",
+              "stack": "AssertionError: expected response to have status code 201 but got 401\n   at Object.eval sandbox-script.js:1:1)"
+            }
+          },
+          {
+            "assertion": "Body contains string",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 1,
+              "test": "Body contains string",
+              "message": "expected '{\"timestamp\":\"2024-06-24T20:31:47.883…' to include 'guid'",
+              "stack": "AssertionError: expected '{\"timestamp\":\"2024-06-24T20:31:47.883…' to include 'guid'\n   at Object.eval sandbox-script.js:2:1)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "571301ea-cfe6-403c-a426-a6852b1b6138",
+          "length": 4,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "e1e7e1f6-882b-424f-ae81-bbeab5b3602d"
+        },
+        "item": {
+          "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+          "name": "Create model in experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "models"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contains string\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                  "\r",
+                  "\r",
+                  "//Vizualize response\r",
+                  "var template = `\r",
+                  "<style type=\"text/css\">\r",
+                  "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                  "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                  "    .tftable tr {background-color:#ffffff;}\r",
+                  "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                  "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                  "</style>\r",
+                  "\r",
+                  "<table class=\"tftable\" border=\"1\">\r",
+                  "    <tr>\r",
+                  "        <th>Description</th>\r",
+                  "        <th>GUID</th>\r",
+                  "        <th>Created</th>\r",
+                  "        <th>Updated</th>\r",
+                  "        <th>User GUID</th>\r",
+                  "        <th>Email</th>\r",
+                  "        <th>SSO ID</th>\r",
+                  "        <th>First Name</th>\r",
+                  "        <th>Last Name</th>\r",
+                  "        <th>Short Name</th>\r",
+                  "        <th>Schema</th>\r",
+                  "        <th>Presentation Name</th>\r",
+                  "    </tr>\r",
+                  "    <tr>\r",
+                  "        <td>{{response.description}}</td>\r",
+                  "        <td>{{response.guid}}</td>\r",
+                  "        <td>{{response.created}}</td>\r",
+                  "        <td>{{response.updated}}</td>\r",
+                  "        <td>{{response.user.guid}}</td>\r",
+                  "        <td>{{response.user.email}}</td>\r",
+                  "        <td>{{response.user.sso_id}}</td>\r",
+                  "        <td>{{response.user.first_name}}</td>\r",
+                  "        <td>{{response.user.last_name}}</td>\r",
+                  "        <td>{{response.user.short_name}}</td>\r",
+                  "        <td>{{response.schema}}</td>\r",
+                  "        <td>{{response.presentation_name}}</td>\r",
+                  "    </tr>\r",
+                  "</table>\r",
+                  "`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    return { response: pm.response.json() }\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());"
+                ],
+                "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8081",
+            "path": [
+              "service-ml-middleware",
+              "api",
+              "models"
+            ],
+            "host": [
+              "bi-tst-01"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "62ab4bd9-0a90-4882-a74b-0d753992849f",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "bi-tst-01:8081",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "113",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"null\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "bc6992a5-0b64-47af-b933-55b35b90df48",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 24 Jun 2024 20:31:49 GMT"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              52,
+              45,
+              48,
+              54,
+              45,
+              50,
+              52,
+              84,
+              50,
+              48,
+              58,
+              51,
+              49,
+              58,
+              52,
+              57,
+              46,
+              48,
+              55,
+              55,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              52,
+              48,
+              49,
+              44,
+              34,
+              112,
+              97,
+              116,
+              104,
+              34,
+              58,
+              34,
+              47,
+              115,
+              101,
+              114,
+              118,
+              105,
+              99,
+              101,
+              45,
+              109,
+              108,
+              45,
+              109,
+              105,
+              100,
+              100,
+              108,
+              101,
+              119,
+              97,
+              114,
+              101,
+              47,
+              97,
+              112,
+              105,
+              47,
+              109,
+              111,
+              100,
+              101,
+              108,
+              115,
+              34,
+              44,
+              34,
+              104,
+              116,
+              116,
+              112,
+              95,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              85,
+              78,
+              65,
+              85,
+              84,
+              72,
+              79,
+              82,
+              73,
+              90,
+              69,
+              68,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              95,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              70,
+              117,
+              108,
+              108,
+              32,
+              97,
+              117,
+              116,
+              104,
+              101,
+              110,
+              116,
+              105,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              32,
+              105,
+              115,
+              32,
+              114,
+              101,
+              113,
+              117,
+              105,
+              114,
+              101,
+              100,
+              32,
+              116,
+              111,
+              32,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              32,
+              116,
+              104,
+              105,
+              115,
+              32,
+              114,
+              101,
+              115,
+              111,
+              117,
+              114,
+              99,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 21,
+          "responseSize": 198
+        },
+        "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 201",
+              "message": "expected response to have status code 201 but got 401",
+              "stack": "AssertionError: expected response to have status code 201 but got 401\n   at Object.eval sandbox-script.js:1:2)"
+            }
+          },
+          {
+            "assertion": "Body contains string",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 1,
+              "test": "Body contains string",
+              "message": "expected '{\"timestamp\":\"2024-06-24T20:31:49.077…' to include 'guid'",
+              "stack": "AssertionError: expected '{\"timestamp\":\"2024-06-24T20:31:49.077…' to include 'guid'\n   at Object.eval sandbox-script.js:2:2)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "c3f5b76f-086c-4b77-9cbd-3dbb9dc5c9d5",
+          "length": 4,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "6294b551-85f2-4111-b259-d3a55befaa14"
+        },
+        "item": {
+          "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+          "name": "Delete model",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "models",
+                "{{modelGuid}}"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8081",
+            "path": [
+              "service-ml-middleware",
+              "api",
+              "models",
+              "null"
+            ],
+            "host": [
+              "bi-tst-01"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "b4d83321-5815-448d-ba27-a1a47929564c",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "bi-tst-01:8081",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "DELETE",
+          "body": {
+            "mode": "raw",
+            "raw": "",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "0451d63f-4980-40e3-88a2-a2e6acd16159",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 24 Jun 2024 20:31:50 GMT"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              52,
+              45,
+              48,
+              54,
+              45,
+              50,
+              52,
+              84,
+              50,
+              48,
+              58,
+              51,
+              49,
+              58,
+              53,
+              48,
+              46,
+              50,
+              50,
+              52,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              52,
+              48,
+              49,
+              44,
+              34,
+              112,
+              97,
+              116,
+              104,
+              34,
+              58,
+              34,
+              47,
+              115,
+              101,
+              114,
+              118,
+              105,
+              99,
+              101,
+              45,
+              109,
+              108,
+              45,
+              109,
+              105,
+              100,
+              100,
+              108,
+              101,
+              119,
+              97,
+              114,
+              101,
+              47,
+              97,
+              112,
+              105,
+              47,
+              109,
+              111,
+              100,
+              101,
+              108,
+              115,
+              47,
+              110,
+              117,
+              108,
+              108,
+              34,
+              44,
+              34,
+              104,
+              116,
+              116,
+              112,
+              95,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              85,
+              78,
+              65,
+              85,
+              84,
+              72,
+              79,
+              82,
+              73,
+              90,
+              69,
+              68,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              95,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              70,
+              117,
+              108,
+              108,
+              32,
+              97,
+              117,
+              116,
+              104,
+              101,
+              110,
+              116,
+              105,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              32,
+              105,
+              115,
+              32,
+              114,
+              101,
+              113,
+              117,
+              105,
+              114,
+              101,
+              100,
+              32,
+              116,
+              111,
+              32,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              32,
+              116,
+              104,
+              105,
+              115,
+              32,
+              114,
+              101,
+              115,
+              111,
+              117,
+              114,
+              99,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 19,
+          "responseSize": 203
+        },
+        "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 200",
+              "message": "expected response to have status code 200 but got 401",
+              "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:3)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "44afddc2-7bbe-4138-811e-f6e5c348a920",
+          "length": 4,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "ac331296-5c4a-4fc0-98be-c61413ef899e"
+        },
+        "item": {
+          "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+          "name": "Delete experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "experiments",
+                "{{experimentGuid}}"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8081",
+            "path": [
+              "service-ml-middleware",
+              "api",
+              "experiments",
+              "null"
+            ],
+            "host": [
+              "bi-tst-01"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.37.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d5f45b1a-7b05-4449-991f-4d7c50ad11a9",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "bi-tst-01:8081",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "DELETE",
+          "body": {
+            "mode": "raw",
+            "raw": "",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "9a16887f-9b2c-452f-9d9b-c3ec9d857166",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "transfer-encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Method"
+            },
+            {
+              "key": "Vary",
+              "value": "Access-Control-Request-Headers"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 24 Jun 2024 20:31:51 GMT"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              52,
+              45,
+              48,
+              54,
+              45,
+              50,
+              52,
+              84,
+              50,
+              48,
+              58,
+              51,
+              49,
+              58,
+              53,
+              49,
+              46,
+              51,
+              53,
+              57,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              52,
+              48,
+              49,
+              44,
+              34,
+              112,
+              97,
+              116,
+              104,
+              34,
+              58,
+              34,
+              47,
+              115,
+              101,
+              114,
+              118,
+              105,
+              99,
+              101,
+              45,
+              109,
+              108,
+              45,
+              109,
+              105,
+              100,
+              100,
+              108,
+              101,
+              119,
+              97,
+              114,
+              101,
+              47,
+              97,
+              112,
+              105,
+              47,
+              101,
+              120,
+              112,
+              101,
+              114,
+              105,
+              109,
+              101,
+              110,
+              116,
+              115,
+              47,
+              110,
+              117,
+              108,
+              108,
+              34,
+              44,
+              34,
+              104,
+              116,
+              116,
+              112,
+              95,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              85,
+              78,
+              65,
+              85,
+              84,
+              72,
+              79,
+              82,
+              73,
+              90,
+              69,
+              68,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              95,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              70,
+              117,
+              108,
+              108,
+              32,
+              97,
+              117,
+              116,
+              104,
+              101,
+              110,
+              116,
+              105,
+              99,
+              97,
+              116,
+              105,
+              111,
+              110,
+              32,
+              105,
+              115,
+              32,
+              114,
+              101,
+              113,
+              117,
+              105,
+              114,
+              101,
+              100,
+              32,
+              116,
+              111,
+              32,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              32,
+              116,
+              104,
+              105,
+              115,
+              32,
+              114,
+              101,
+              115,
+              111,
+              117,
+              114,
+              99,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 26,
+          "responseSize": 208
+        },
+        "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 200",
+              "message": "expected response to have status code 200 but got 401",
+              "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:4)"
+            }
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 812
+    },
+    "failures": [
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 201",
+          "message": "expected response to have status code 201 but got 401",
+          "stack": "AssertionError: expected response to have status code 201 but got 401\n   at Object.eval sandbox-script.js:1:1)",
+          "checksum": "cb3d49149985bb3e7ff3ea5855bf3559",
+          "id": "1d065782-c4f2-4792-bcb4-8f92462c1885",
+          "timestamp": 1719261107353,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 1,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+          "name": "Create experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "experiments"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "         pm.response.to.have.status(201)\r",
+                  "     });\r",
+                  "\r",
+                  "pm.test(\"Body contains string\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                  "\r",
+                  "\r",
+                  "//Vizualize response\r",
+                  "var template = `\r",
+                  "<style type=\"text/css\">\r",
+                  "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                  "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                  "    .tftable tr {background-color:#ffffff;}\r",
+                  "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                  "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                  "</style>\r",
+                  "\r",
+                  "<table class=\"tftable\" border=\"1\">\r",
+                  "    <tr>\r",
+                  "        <th>Description</th>\r",
+                  "        <th>GUID</th>\r",
+                  "        <th>Created</th>\r",
+                  "        <th>Updated</th>\r",
+                  "        <th>User GUID</th>\r",
+                  "        <th>Email</th>\r",
+                  "        <th>SSO ID</th>\r",
+                  "        <th>First Name</th>\r",
+                  "        <th>Last Name</th>\r",
+                  "        <th>Short Name</th>\r",
+                  "        <th>Schema</th>\r",
+                  "        <th>Presentation Name</th>\r",
+                  "    </tr>\r",
+                  "    <tr>\r",
+                  "        <td>{{response.description}}</td>\r",
+                  "        <td>{{response.guid}}</td>\r",
+                  "        <td>{{response.created}}</td>\r",
+                  "        <td>{{response.updated}}</td>\r",
+                  "        <td>{{response.user.guid}}</td>\r",
+                  "        <td>{{response.user.email}}</td>\r",
+                  "        <td>{{response.user.sso_id}}</td>\r",
+                  "        <td>{{response.user.first_name}}</td>\r",
+                  "        <td>{{response.user.last_name}}</td>\r",
+                  "        <td>{{response.user.short_name}}</td>\r",
+                  "        <td>{{response.schema}}</td>\r",
+                  "        <td>{{response.presentation_name}}</td>\r",
+                  "    </tr>\r",
+                  "</table>\r",
+                  "`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    return { response: pm.response.json() }\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                  ""
+                ],
+                "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+          "name": "Scenario 2: End-to-end (DL) Copy",
+          "description": {
+            "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+            "type": "text/plain"
+          },
+          "item": [
+            {
+              "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+              "name": "Create experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "         pm.response.to.have.status(201)\r",
+                      "     });\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      ""
+                    ],
+                    "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      ""
+                    ],
+                    "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+              "name": "Create model in experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());"
+                    ],
+                    "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+              "name": "Delete model",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models",
+                    "{{modelGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+              "name": "Delete experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments",
+                    "{{experimentGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 4,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "c80a741f-de79-4165-99bf-b63f15fb3d0c",
+          "httpRequestId": "75c73975-92ca-4d6a-93ce-45e19388f50c",
+          "scriptId": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+          "execution": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 1,
+          "test": "Body contains string",
+          "message": "expected '{\"timestamp\":\"2024-06-24T20:31:47.883…' to include 'guid'",
+          "stack": "AssertionError: expected '{\"timestamp\":\"2024-06-24T20:31:47.883…' to include 'guid'\n   at Object.eval sandbox-script.js:2:1)",
+          "checksum": "c6040602ee1b881ae1aac4bfb7f62a12",
+          "id": "6bd1c84d-b501-46ca-ab33-1d60546b6e25",
+          "timestamp": 1719261107360,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 2,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 1,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:1 in test-script",
+        "source": {
+          "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+          "name": "Create experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "experiments"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "         pm.response.to.have.status(201)\r",
+                  "     });\r",
+                  "\r",
+                  "pm.test(\"Body contains string\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                  "\r",
+                  "\r",
+                  "//Vizualize response\r",
+                  "var template = `\r",
+                  "<style type=\"text/css\">\r",
+                  "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                  "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                  "    .tftable tr {background-color:#ffffff;}\r",
+                  "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                  "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                  "</style>\r",
+                  "\r",
+                  "<table class=\"tftable\" border=\"1\">\r",
+                  "    <tr>\r",
+                  "        <th>Description</th>\r",
+                  "        <th>GUID</th>\r",
+                  "        <th>Created</th>\r",
+                  "        <th>Updated</th>\r",
+                  "        <th>User GUID</th>\r",
+                  "        <th>Email</th>\r",
+                  "        <th>SSO ID</th>\r",
+                  "        <th>First Name</th>\r",
+                  "        <th>Last Name</th>\r",
+                  "        <th>Short Name</th>\r",
+                  "        <th>Schema</th>\r",
+                  "        <th>Presentation Name</th>\r",
+                  "    </tr>\r",
+                  "    <tr>\r",
+                  "        <td>{{response.description}}</td>\r",
+                  "        <td>{{response.guid}}</td>\r",
+                  "        <td>{{response.created}}</td>\r",
+                  "        <td>{{response.updated}}</td>\r",
+                  "        <td>{{response.user.guid}}</td>\r",
+                  "        <td>{{response.user.email}}</td>\r",
+                  "        <td>{{response.user.sso_id}}</td>\r",
+                  "        <td>{{response.user.first_name}}</td>\r",
+                  "        <td>{{response.user.last_name}}</td>\r",
+                  "        <td>{{response.user.short_name}}</td>\r",
+                  "        <td>{{response.schema}}</td>\r",
+                  "        <td>{{response.presentation_name}}</td>\r",
+                  "    </tr>\r",
+                  "</table>\r",
+                  "`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    return { response: pm.response.json() }\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                  ""
+                ],
+                "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+          "name": "Scenario 2: End-to-end (DL) Copy",
+          "description": {
+            "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+            "type": "text/plain"
+          },
+          "item": [
+            {
+              "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+              "name": "Create experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "         pm.response.to.have.status(201)\r",
+                      "     });\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      ""
+                    ],
+                    "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      ""
+                    ],
+                    "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+              "name": "Create model in experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());"
+                    ],
+                    "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+              "name": "Delete model",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models",
+                    "{{modelGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+              "name": "Delete experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments",
+                    "{{experimentGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 4,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "c80a741f-de79-4165-99bf-b63f15fb3d0c",
+          "httpRequestId": "75c73975-92ca-4d6a-93ce-45e19388f50c",
+          "scriptId": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+          "execution": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 201",
+          "message": "expected response to have status code 201 but got 401",
+          "stack": "AssertionError: expected response to have status code 201 but got 401\n   at Object.eval sandbox-script.js:1:2)",
+          "checksum": "0ea2ed10193c96e64c68e8a32bd2cb6a",
+          "id": "6059798b-9390-4c5b-924d-0e1f37d01544",
+          "timestamp": 1719261108517,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+          "name": "Create model in experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "models"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contains string\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                  "\r",
+                  "\r",
+                  "//Vizualize response\r",
+                  "var template = `\r",
+                  "<style type=\"text/css\">\r",
+                  "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                  "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                  "    .tftable tr {background-color:#ffffff;}\r",
+                  "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                  "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                  "</style>\r",
+                  "\r",
+                  "<table class=\"tftable\" border=\"1\">\r",
+                  "    <tr>\r",
+                  "        <th>Description</th>\r",
+                  "        <th>GUID</th>\r",
+                  "        <th>Created</th>\r",
+                  "        <th>Updated</th>\r",
+                  "        <th>User GUID</th>\r",
+                  "        <th>Email</th>\r",
+                  "        <th>SSO ID</th>\r",
+                  "        <th>First Name</th>\r",
+                  "        <th>Last Name</th>\r",
+                  "        <th>Short Name</th>\r",
+                  "        <th>Schema</th>\r",
+                  "        <th>Presentation Name</th>\r",
+                  "    </tr>\r",
+                  "    <tr>\r",
+                  "        <td>{{response.description}}</td>\r",
+                  "        <td>{{response.guid}}</td>\r",
+                  "        <td>{{response.created}}</td>\r",
+                  "        <td>{{response.updated}}</td>\r",
+                  "        <td>{{response.user.guid}}</td>\r",
+                  "        <td>{{response.user.email}}</td>\r",
+                  "        <td>{{response.user.sso_id}}</td>\r",
+                  "        <td>{{response.user.first_name}}</td>\r",
+                  "        <td>{{response.user.last_name}}</td>\r",
+                  "        <td>{{response.user.short_name}}</td>\r",
+                  "        <td>{{response.schema}}</td>\r",
+                  "        <td>{{response.presentation_name}}</td>\r",
+                  "    </tr>\r",
+                  "</table>\r",
+                  "`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    return { response: pm.response.json() }\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());"
+                ],
+                "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+          "name": "Scenario 2: End-to-end (DL) Copy",
+          "description": {
+            "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+            "type": "text/plain"
+          },
+          "item": [
+            {
+              "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+              "name": "Create experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "         pm.response.to.have.status(201)\r",
+                      "     });\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      ""
+                    ],
+                    "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      ""
+                    ],
+                    "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+              "name": "Create model in experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());"
+                    ],
+                    "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+              "name": "Delete model",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models",
+                    "{{modelGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+              "name": "Delete experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments",
+                    "{{experimentGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "571301ea-cfe6-403c-a426-a6852b1b6138",
+          "length": 4,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "e1e7e1f6-882b-424f-ae81-bbeab5b3602d",
+          "scriptId": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+          "execution": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 1,
+          "test": "Body contains string",
+          "message": "expected '{\"timestamp\":\"2024-06-24T20:31:49.077…' to include 'guid'",
+          "stack": "AssertionError: expected '{\"timestamp\":\"2024-06-24T20:31:49.077…' to include 'guid'\n   at Object.eval sandbox-script.js:2:2)",
+          "checksum": "b7c322991bef21f25100baf8ce2d9409",
+          "id": "7bad5ce7-99c4-4722-9fcb-d2a70a4a1f12",
+          "timestamp": 1719261108519,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 2,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:1 in test-script",
+        "source": {
+          "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+          "name": "Create model in experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "models"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contains string\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                  "\r",
+                  "\r",
+                  "//Vizualize response\r",
+                  "var template = `\r",
+                  "<style type=\"text/css\">\r",
+                  "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                  "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                  "    .tftable tr {background-color:#ffffff;}\r",
+                  "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                  "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                  "</style>\r",
+                  "\r",
+                  "<table class=\"tftable\" border=\"1\">\r",
+                  "    <tr>\r",
+                  "        <th>Description</th>\r",
+                  "        <th>GUID</th>\r",
+                  "        <th>Created</th>\r",
+                  "        <th>Updated</th>\r",
+                  "        <th>User GUID</th>\r",
+                  "        <th>Email</th>\r",
+                  "        <th>SSO ID</th>\r",
+                  "        <th>First Name</th>\r",
+                  "        <th>Last Name</th>\r",
+                  "        <th>Short Name</th>\r",
+                  "        <th>Schema</th>\r",
+                  "        <th>Presentation Name</th>\r",
+                  "    </tr>\r",
+                  "    <tr>\r",
+                  "        <td>{{response.description}}</td>\r",
+                  "        <td>{{response.guid}}</td>\r",
+                  "        <td>{{response.created}}</td>\r",
+                  "        <td>{{response.updated}}</td>\r",
+                  "        <td>{{response.user.guid}}</td>\r",
+                  "        <td>{{response.user.email}}</td>\r",
+                  "        <td>{{response.user.sso_id}}</td>\r",
+                  "        <td>{{response.user.first_name}}</td>\r",
+                  "        <td>{{response.user.last_name}}</td>\r",
+                  "        <td>{{response.user.short_name}}</td>\r",
+                  "        <td>{{response.schema}}</td>\r",
+                  "        <td>{{response.presentation_name}}</td>\r",
+                  "    </tr>\r",
+                  "</table>\r",
+                  "`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    return { response: pm.response.json() }\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());"
+                ],
+                "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+          "name": "Scenario 2: End-to-end (DL) Copy",
+          "description": {
+            "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+            "type": "text/plain"
+          },
+          "item": [
+            {
+              "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+              "name": "Create experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "         pm.response.to.have.status(201)\r",
+                      "     });\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      ""
+                    ],
+                    "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      ""
+                    ],
+                    "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+              "name": "Create model in experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());"
+                    ],
+                    "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+              "name": "Delete model",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models",
+                    "{{modelGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+              "name": "Delete experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments",
+                    "{{experimentGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "571301ea-cfe6-403c-a426-a6852b1b6138",
+          "length": 4,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "e1e7e1f6-882b-424f-ae81-bbeab5b3602d",
+          "scriptId": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+          "execution": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 200",
+          "message": "expected response to have status code 200 but got 401",
+          "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:3)",
+          "checksum": "fd055fab3277e1b6074e35d9295842ee",
+          "id": "5cc2d279-8cb7-4bdd-bd09-507fe8dfaa3c",
+          "timestamp": 1719261109660,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 3,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+          "name": "Delete model",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "models",
+                "{{modelGuid}}"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+          "name": "Scenario 2: End-to-end (DL) Copy",
+          "description": {
+            "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+            "type": "text/plain"
+          },
+          "item": [
+            {
+              "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+              "name": "Create experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "         pm.response.to.have.status(201)\r",
+                      "     });\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      ""
+                    ],
+                    "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      ""
+                    ],
+                    "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+              "name": "Create model in experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());"
+                    ],
+                    "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+              "name": "Delete model",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models",
+                    "{{modelGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+              "name": "Delete experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments",
+                    "{{experimentGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "c3f5b76f-086c-4b77-9cbd-3dbb9dc5c9d5",
+          "length": 4,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "6294b551-85f2-4111-b259-d3a55befaa14",
+          "scriptId": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+          "execution": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 200",
+          "message": "expected response to have status code 200 but got 401",
+          "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:4)",
+          "checksum": "665022f68538bcecd9c4d9758df5687d",
+          "id": "34db2094-1ff9-43b8-97f7-cf5e4d71313c",
+          "timestamp": 1719261110791,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 4,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+          "name": "Delete experiment",
+          "request": {
+            "url": {
+              "protocol": "http",
+              "path": [
+                "service-ml-middleware",
+                "api",
+                "experiments",
+                "{{experimentGuid}}"
+              ],
+              "host": [
+                "{{GATEWAY_URL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "7bb6330e-7a5c-47b9-a793-ba1480ddb1d8",
+          "name": "Scenario 2: End-to-end (DL) Copy",
+          "description": {
+            "content": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment",
+            "type": "text/plain"
+          },
+          "item": [
+            {
+              "id": "6ed5267e-9a57-4f99-a52e-c2ae0b18d310",
+              "name": "Create experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4e45af83-02e9-414f-9b8b-d8d1ab5e6fdb",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "         pm.response.to.have.status(201)\r",
+                      "     });\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      ""
+                    ],
+                    "_lastExecutionId": "c3a1c68c-b0a0-4cb8-93a2-2cac356d3347"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "b082c306-e2f0-4542-ab16-02e8b7b90585",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      ""
+                    ],
+                    "_lastExecutionId": "04b2b9fb-6712-4652-a8a8-72f6fb730df2"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "91e139a8-cc54-4e5d-adaa-a0825a191137",
+              "name": "Create model in experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"description\": \"{{randomString}}\",\r\n  \"presentation_name\": \"{{randomString}}\",\r\n  \"experiment_id\": \"{{experimentGuid}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2c55f1d-bfd8-49a4-9c45-72a93eff36f6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Body contains string\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "     pm.collectionVariables.set(\"modelGuid\", jsonData.guid);\r",
+                      "\r",
+                      "\r",
+                      "//Vizualize response\r",
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Description</th>\r",
+                      "        <th>GUID</th>\r",
+                      "        <th>Created</th>\r",
+                      "        <th>Updated</th>\r",
+                      "        <th>User GUID</th>\r",
+                      "        <th>Email</th>\r",
+                      "        <th>SSO ID</th>\r",
+                      "        <th>First Name</th>\r",
+                      "        <th>Last Name</th>\r",
+                      "        <th>Short Name</th>\r",
+                      "        <th>Schema</th>\r",
+                      "        <th>Presentation Name</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.description}}</td>\r",
+                      "        <td>{{response.guid}}</td>\r",
+                      "        <td>{{response.created}}</td>\r",
+                      "        <td>{{response.updated}}</td>\r",
+                      "        <td>{{response.user.guid}}</td>\r",
+                      "        <td>{{response.user.email}}</td>\r",
+                      "        <td>{{response.user.sso_id}}</td>\r",
+                      "        <td>{{response.user.first_name}}</td>\r",
+                      "        <td>{{response.user.last_name}}</td>\r",
+                      "        <td>{{response.user.short_name}}</td>\r",
+                      "        <td>{{response.schema}}</td>\r",
+                      "        <td>{{response.presentation_name}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return { response: pm.response.json() }\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());"
+                    ],
+                    "_lastExecutionId": "ee21afa8-deb9-437f-9899-a2a395a6d3e7"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f36299fd-a598-43e3-83ea-fa686d9d2e95",
+              "name": "Delete model",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "models",
+                    "{{modelGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b9015c6-2e2f-4334-9bb6-8b5a8eff5b9d",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "bce127e7-2a02-400c-a7a7-6c4cf36548dc"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "47118b73-c7ac-4ecd-92ef-92d0da375037",
+              "name": "Delete experiment",
+              "request": {
+                "url": {
+                  "protocol": "http",
+                  "path": [
+                    "service-ml-middleware",
+                    "api",
+                    "experiments",
+                    "{{experimentGuid}}"
+                  ],
+                  "host": [
+                    "{{GATEWAY_URL}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a1202838-d284-43e7-b574-2035b7607cf3",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "44afddc2-7bbe-4138-811e-f6e5c348a920",
+          "length": 4,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "ac331296-5c4a-4fc0-98be-c61413ef899e",
+          "scriptId": "a1202838-d284-43e7-b574-2035b7607cf3",
+          "execution": "e522ee61-24ce-4f55-86a8-4dd2214a2407"
+        }
+      }
+    ],
+    "error": null
+  }
+}
