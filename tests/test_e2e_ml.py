@@ -16,7 +16,7 @@ from pages.login_page import LoginPage
 @allure.feature('E2E')
 @allure.story('E2E with ML algorithm')
 class TestE2EMLAlgorithm:
-    def test_e2e_ml(self, page: Page):
+    def test_e2e_ml(self, page):
         login_page = LoginPage(page)
         home_page = HomePage(page)
         experiments_page = ExperimentPage(page)

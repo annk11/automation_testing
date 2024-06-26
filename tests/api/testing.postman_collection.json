@@ -16,10 +16,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic=ML\r",
+									"// @allure.label.feature=Experiments\r",
+									"// @allure.label.story=Experiments\r",
+									"\r",
 									"pm.test(\"Status code is 201\", function () {\r",
 									"         pm.response.to.have.status(201)\r",
 									"     });\r",
-									"\r",
+									" \r",
 									"pm.test(\"Body contains string\", function () {\r",
 									"    pm.expect(pm.response.text()).to.include(\"guid\")\r",
 									"});\r",
@@ -308,6 +313,83 @@
 				}
 			],
 			"description": "1. Create an experiment\n    \n2. Update experiment\n    \n3. Create a model in experiment\n    \n4. Create a preprocessing step\n    \n5. Create a model parameter step (with DL algorithm)\n    \n6. Create a training step\n    \n7. Create links between steps\n    \n8. Run the model\n    \n9. Change version state to test\n    \n10. Run a version in a testing state\n    \n11. Change version state to prod\n    \n12. Run a version in a production state\n    \n13. Delete a run\n    \n14. Delete a model\n    \n15. Delete an experiment"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// Функция для наименований\r",
+					"function randomString(length = 1) {\r",
+					"    let result = \"\";\r",
+					"    const characters = \"abcdefghijklmnopqrstuvwxyz\";\r",
+					"    const charactersLength = characters.length;\r",
+					"    for (let i = 0; i < length; i++) {\r",
+					"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+					"    }\r",
+					"    return result;\r",
+					"}\r",
+					"\r",
+					"const STRING_LEN = 10;\r",
+					"pm.variables.set('randomString', randomString(STRING_LEN));\r",
+					"\r",
+					"// Авторизация, получение токена и добавление realm_guid в headers\r",
+					"pm.request.headers.add({\r",
+					"key: 'Realm_guid',\r",
+					"value: 'eccfb99c-7a0e-45fe-bce0-a7ba31f2c99c'\r",
+					"});\r",
+					"\r",
+					"pm.sendRequest({\r",
+					"    url: \"http://bi-tst-01:8081/service-auth/auth/login\",\r",
+					"    method: \"POST\",\r",
+					"    header: {\r",
+					"        \"Content-Type\": \"application/json\"\r",
+					"    },\r",
+					"    body: JSON.stringify({\r",
+					"        \"username\": \"nikia\",\r",
+					"        \"password\": \"wer\"\r",
+					"    })\r",
+					"},\r",
+					"function (err, res) {\r",
+					"    pm.environment.set(\"token\", res.json().access_token);\r",
+					"    console.log(\"Autorization is done\")\r",
+					"})"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "experimentSchema",
+			"value": "1f6e4c39-c8fa-4195-a097-06f8adab8995",
+			"type": "string"
+		},
+		{
+			"key": "experimentGuid",
+			"value": ""
 		}
 	]
 }

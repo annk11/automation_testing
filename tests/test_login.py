@@ -11,7 +11,7 @@ from pages.login_page import LoginPage
 @allure.feature('Login')
 @allure.story('Login Page')
 class TestLoginPage:
-    def test_login(self, page: Page):
+    def test_login(self, page):
         login_page = LoginPage(page)
 
         with allure.step("Открытие страницы входа"):
