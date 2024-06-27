@@ -29,11 +29,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-allure
+        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-json newman-reporter-allure
         pip install -r requirements.txt
 
     - name: Run Postman tests
-      run: newman run tests/api/testing.postman_collection.json -e tests/api/test-stand-ml.postman_environment.json -r cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export=./allure-results --delay-request 1000 || true
+      run: newman run ./tests/api/testing.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 1000 || true
 
     - name: Run UI tests
       run: pytest --alluredir=allure-results || true
@@ -57,21 +57,3 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
-
-  deploy_allure_report:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'allure-report'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
