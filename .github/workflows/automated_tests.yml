@@ -105,7 +105,7 @@ jobs:
 
     name: Save data
     steps:
-      - run: db_manager.py
+      - run: python3 db_manager.py
 
   send-email-message:
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
 
     name: Send email notification
     steps:
-      - run: manager.py
+      - run: python3 test_report.py
 
   send_telegram_message:
     runs-on: ubuntu-latest
