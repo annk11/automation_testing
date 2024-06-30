@@ -1,0 +1,102 @@
+name: Automated tests
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    name: Run tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Chrome
+        run: sudo apt-get install google-chrome-stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Run UI tests
+        run: pytest --alluredir=allure-results
+        continue-on-error: true
+
+      - name: Store allure results
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path:
+            allure-results
+          retention-days: 1
+
+  generate-report:
+    runs-on: ubuntu-latest
+    needs: test
+
+    name: Generate allure report
+    steps:
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+      - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.23.1/allure-2.23.1.tgz && sudo tar -zxvf allure-2.23.1.tgz -C /opt/ && sudo ln -s /opt/allure-2.23.1/bin/allure /usr/bin/allure
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+
+      - run: allure generate -c allure-results -o _site
+
+      - name: Store generated report
+        uses: actions/upload-artifact@v3
+        with:
+          name: _site
+          path:
+            _site
+          retention-days: 1
+
+  publish-report:
+    runs-on: ubuntu-latest
+    needs: generate-report
+
+    name: Report publication
+    steps:
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1.2.9
+
+  send_telegram_message:
+    runs-on: ubuntu-latest
+
+    name: Send notification
+    env:
+      TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
+      TELEGRAM_TO: 531912826
+    needs: publish-report
+    steps:
+      - uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
