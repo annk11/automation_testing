@@ -99,15 +99,17 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v1.2.9
 
-  send_telegram_message:
+  save_data_and_send_message:
     runs-on: ubuntu-latest
 
-    name: Send notification
+    name: Save data and send notification
     env:
       TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
       TELEGRAM_TO: 531912826
     needs: publish-report
     steps:
+      - run: manager.py
+      - run: db_manager.py
       - uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
