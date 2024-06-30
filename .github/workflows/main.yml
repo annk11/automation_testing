@@ -5,26 +5,35 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   run_tests_and_notify:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '16'
 
     - name: Install dependencies
       run: |
-        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-allure
+        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-json newman-reporter-allure
         pip install -r requirements.txt
 
     - name: Run Postman tests
-      run: newman run tests/api/testing.postman_collection.json -e tests/api/test-stand-ml.postman_environment.json -r cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-report --delay-request 1000 || true
+      run: newman run ./tests/api/testing.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 1000 || true
 
     - name: Run UI tests
       run: pytest --alluredir=allure-results || true
