@@ -32,9 +32,10 @@ jobs:
       - name: Install Chrome
         run: sudo apt-get install google-chrome-stable
 
-      - name: Install dependencies
+      - name: Install dependencies and browsers
         run: |
           npm install -g playwright
+          playwright install
           pip install -r requirements.txt
 
       - name: Download all workflow run artifacts
