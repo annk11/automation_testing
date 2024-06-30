@@ -36,10 +36,15 @@ jobs:
         run: |
           npm install -g playwright
           playwright install
+          npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-json newman-reporter-allure
           pip install -r requirements.txt
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
+
+      - name: Run Postman API tests
+        run: newman run ./tests/api/testing.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 4000
+        continue-on-error: true
 
       - name: Run UI tests
         run: pytest --alluredir=allure-results
@@ -107,4 +112,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
+          message: Тестирование завершено🥳. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
