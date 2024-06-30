@@ -1,59 +1,59 @@
-#name: Run Tests and Notify
-#
-#on:
-#  push:
-#    branches:
-#      - main
-#
-#permissions:
-#  contents: read
-#  pages: write
-#  id-token: write
-#
-#concurrency:
-#  group: "pages"
-#  cancel-in-progress: false
-#
-#jobs:
-#  run_tests_and_notify:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout code
-#      uses: actions/checkout@v4
-#
-#    - name: Set up Node.js
-#      uses: actions/setup-node@v3
-#      with:
-#        node-version: '16'
-#
-#    - name: Install dependencies
-#      run: |
-#        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-json newman-reporter-allure
-#        pip install -r requirements.txt
-#
-#    - name: Run Postman tests
-#      run: newman run ./tests/api/testing.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 1000 || true
-#
-#    - name: Run UI tests
-#      run: pytest --alluredir=allure-results || true
-#
-#    - name: Generate Allure report
-#      run: allure generate allure-results --clean || true
-#
-#    - name: Send email notification
-#      run: |
-#        echo "To: anastasianuk@yandex.ru\nSubject: Allure Report Notification\n\nHello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | curl -s --request POST --url 'https://api.sendgrid.com/v3/mail/send' --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }} " --header 'Content-Type: application/json' --data-binary @-
-#
-#  send_telegram_message:
-#    runs-on: ubuntu-latest
-#    env:
-#      TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
-#      TELEGRAM_TO: 531912826
-#    needs: run_tests_and_notify
-#    steps:
-#      - uses: appleboy/telegram-action@master
-#        with:
-#          to: ${{ secrets.TELEGRAM_TO }}
-#          token: ${{ secrets.TELEGRAM_TOKEN }}
-#          message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
+name: Run Tests and Notify
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  run_tests_and_notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: |
+        npm install -g newman @wdio/cli allure-commandline newman-reporter-html newman-reporter-json newman-reporter-allure
+        pip install -r requirements.txt
+
+    - name: Run Postman tests
+      run: newman run ./tests/api/testing.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 1000 || true
+
+    - name: Run UI tests
+      run: pytest --alluredir=allure-results || true
+
+    - name: Generate Allure report
+      run: allure generate allure-results --clean || true
+
+    - name: Send email notification
+      run: |
+        echo "To: anastasianuk@yandex.ru\nSubject: Allure Report Notification\n\nHello,\n\nThe Allure report is ready. You can access it here: https://annk11.github.io/automation_testing/" | curl -s --request POST --url 'https://api.sendgrid.com/v3/mail/send' --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }} " --header 'Content-Type: application/json' --data-binary @-
+
+  send_telegram_message:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
+      TELEGRAM_TO: 531912826
+    needs: run_tests_and_notify
+    steps:
+      - uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
