@@ -38,6 +38,7 @@ class TestE2EMLAlgorithm:
 
         with allure.step("Проверка меню блока ML"):
             experiments_page.check_ml_menu()
+            experiments_page.check_experiment_page()
 
         with allure.step("Создание эксперимента"):
             experiments_page.create_experiment()

@@ -10,21 +10,21 @@ class ExperimentPage(BasePage):
     url = 'http://bi-tst-01:8082/ml/experiments'
 
     def check_ml_menu(self):
-        expect(self.page.get_by_role("main").get_by_text("Эксперименты")).to_be_visible()
-        expect(self.page.get_by_text("Список всех ваших экспериментов")).to_be_visible()
         expect(self.page.get_by_role("complementary").locator("a").filter(has_text="Эксперименты")).to_be_visible()
         expect(self.page.locator("a").filter(has_text="Модели")).to_be_visible()
         expect(self.page.get_by_text("hubКонструктор нейросетей")).to_be_visible()
         expect(self.page.locator("a").filter(has_text="Классические алгоритмы")).to_be_visible()
 
+    def check_experiment_page(self):
+        expect(self.page.get_by_role("main")).to_contain_text("Эксперименты")
+        expect(self.page.get_by_role("main")).to_contain_text("Список всех ваших экспериментов")
+
     def create_experiment(self):
         self.page.locator(".q-page-sticky > div > .q-btn").click()
-        self.page.get_by_label("Наименование").click()
         self.page.get_by_label("Наименование").fill(DataGenerator.name)
         self.page.locator("div").filter(has_text=re.compile(r"^Источник данныхarrow_drop_down$")).nth(1).click()
         self.page.get_by_text("ML-хранилище_ml_resultml_result").click()
         self.page.get_by_text("public").click()
-        self.page.get_by_label("Описание").click()
         self.page.get_by_label("Описание").fill(DataGenerator.description)
         self.page.get_by_role("button", name="Создать").click()
 
@@ -35,6 +35,21 @@ class ExperimentPage(BasePage):
     def open_last_experiment(self):
         self.page.locator("div:last-child > .index_wrapper_M6fL4 > .index_panel_svWK0 > .q-btn").click()
         self.page.get_by_text("Открыть эксперимент").click()
+
+    def update_last_experiment(self):
+        self.page.locator("div:last-child > .index_wrapper_M6fL4 > .index_panel_svWK0 > .q-btn").click()
+        self.page.get_by_text("Редактировать").click()
+        self.page.get_by_label("Наименование").fill(DataGenerator.name)
+        self.page.get_by_label("Описание").fill(DataGenerator.description)
+        self.page.get_by_role("button", name="Создать").click()
+
+    def delete_last_experiment(self):
+        self.page.locator("div:last-child > .index_wrapper_M6fL4 > .index_panel_svWK0 > .q-btn").click()
+        self.page.get_by_text("Удалить").click()
+        self.page.get_by_role("button", name="Удалить").click()
+
+    def check_experiment_deleted(self):
+        expect(self.page.get_by_role("alert")).to_contain_text("Эксперимент успешно удален")
 
     def check_page_runs_of_experiments(self):
         expect(self.page.get_by_role("main")).to_contain_text("Полный список запусков по всем моделям "
