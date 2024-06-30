@@ -1,17 +1,9 @@
 name: Automated tests
 
 on:
-  workflow_dispatch:
-    inputs:
-      deployment_target:
-        description: Choose target
-        required: true
-        default: second_test
-        type: choice
-        options:
-          - first_test
-          - second_test
-          - all
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -71,28 +63,26 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+
       - name: Install Chrome
         run: sudo apt-get install google-chrome-stable
-      - name: install dependencies
+
+      - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
-      - name: first_test
-        if: "github.event.inputs.deployment_target == 'first_test'"
-        run: pytest tests/test_button.py::test_button_exist --alluredir=allure-results
-        continue-on-error: true
-      - name: second_test
-        if: "github.event.inputs.deployment_target == 'second_test'"
-        run: pytest tests/test_button.py::test_button_exist_2 --alluredir=allure-results
-        continue-on-error: true
-      - name: all
+
+      - name: Run UI tests
         if: "github.event.inputs.deployment_target == 'all'"
         run: pytest --alluredir=allure-results
         continue-on-error: true
+
       - name: Store allure results
         uses: actions/upload-artifact@v3
         with:
@@ -104,6 +94,7 @@ jobs:
   generate-report:
     runs-on: ubuntu-latest
     needs: test
+
     name: Generate report
     steps:
       - uses: actions/setup-java@v3
@@ -111,9 +102,12 @@ jobs:
           distribution: 'microsoft' # See 'Supported distributions' for available options
           java-version: '17'
       - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.23.1/allure-2.23.1.tgz && sudo tar -zxvf allure-2.23.1.tgz -C /opt/ && sudo ln -s /opt/allure-2.23.1/bin/allure /usr/bin/allure
+
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
+
       - run: allure generate -c allure-results -o _site
+
       - name: Store generated report
         uses: actions/upload-artifact@v3
         with:
@@ -129,8 +123,10 @@ jobs:
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1.2.9
