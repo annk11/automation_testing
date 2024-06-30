@@ -105,6 +105,8 @@ jobs:
 
     name: Save data
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
       - run: python3 db_manager.py
 
   send-email-message:
@@ -113,6 +115,8 @@ jobs:
 
     name: Send email notification
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
       - run: python3 test_report.py
 
   send_telegram_message:
