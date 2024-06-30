@@ -12,9 +12,10 @@ def send_notification(email):
     for i in email:
         msg = 'From: %s\r\nTo: %s\r\nContent-Type: text/html; charset="utf-8"\r\nSubject: %s\r\n\r\n' % (
             sender, i, f'Отчет о тестировании OmegaBI')
-        msg += f'Тестирование завершено🥳 {report_time}. Отчет доступен по ссылке: https://annk11.github.io/automation_testing/'
+        msg += f'Тестирование завершено {report_time}🥳. Отчет доступен по ссылке: https://annk11.github.io/automation_testing/'
         mail_server.sendmail(sender, i, msg.encode('utf8'))
     mail_server.quit()
+
 
 timezone = pytz.timezone('Europe/Moscow')
 current_time = datetime.now()

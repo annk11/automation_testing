@@ -2,6 +2,7 @@ import allure
 from playwright.sync_api import Page
 
 from data.data import UserData
+from pages.home_page import HomePage
 from pages.login_page import LoginPage
 
 
@@ -13,6 +14,7 @@ from pages.login_page import LoginPage
 class TestLoginPage:
     def test_login(self, page):
         login_page = LoginPage(page)
+        home_page = HomePage(page)
 
         with allure.step("Открытие страницы входа"):
             login_page.open()
@@ -24,7 +26,7 @@ class TestLoginPage:
             login_page.set_realm()
 
         with allure.step("Проверка домашней страницы"):
-            login_page.check_home_page()
-            login_page.check_menu_availability()
+            home_page.check_home_page()
+            home_page.check_menu_availability()
 
     assert "Тест завершен"

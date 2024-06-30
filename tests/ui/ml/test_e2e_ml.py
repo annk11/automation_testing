@@ -1,6 +1,4 @@
 import allure
-import pytest
-from playwright.sync_api import Page
 
 from data.data import UserData
 from pages.experiment_page import ExperimentPage
@@ -31,9 +29,8 @@ class TestE2EMLAlgorithm:
             login_page.set_realm()
 
         with allure.step("Проверка домашней страницы"):
-            login_page.check_home_page()
-            login_page.check_menu_availability()
-            assert 'Пользователь успешно зарегистрирован'
+            home_page.check_home_page()
+            home_page.check_menu_availability()
 
         with allure.step("Проверка доступности блока ML"):
             home_page.check_ml_menu()
