@@ -24,11 +24,18 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
       - name: Install Chrome
         run: sudo apt-get install google-chrome-stable
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          npm install -g playwright
+          pip install -r requirements.txt
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
