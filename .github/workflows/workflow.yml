@@ -79,7 +79,6 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Run UI tests
-        if: "github.event.inputs.deployment_target == 'all'"
         run: pytest --alluredir=allure-results
         continue-on-error: true
 
@@ -130,3 +129,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1.2.9
+
+  send_telegram_message:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
+      TELEGRAM_TO: 531912826
+    needs: publish-report
+    steps:
+      - uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: Тестирование завершено. Отчет доступен по ссылке:https://annk11.github.io/automation_testing/
