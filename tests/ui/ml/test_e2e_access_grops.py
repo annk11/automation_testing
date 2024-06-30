@@ -9,7 +9,7 @@ from pages.login_page import LoginPage
 @allure.severity('NORMAL')
 @allure.description('Сквозной кейс для блока Предиктивной аналитики. Проверяет функциональность'
                     ' создания группы доступа для ML-инженеров и добавляет туда шаблон и эксперимент.')
-@allure.epic('ML')
+@allure.epic('UI-tests')
 @allure.feature('E2E')
 @allure.story('Access groups for ML experiment/pattern')
 class TestE2EAccessGroups:
@@ -24,7 +24,7 @@ class TestE2EAccessGroups:
         with allure.step("Ввод логина и пароля"):
             login_page.login(UserData.username, UserData.password)
 
-        with allure.step("Выбор домена"):
+        with allure.step("Выбор домена ML"):
             login_page.set_realm()
 
         with allure.step("Проверка домашней страницы"):

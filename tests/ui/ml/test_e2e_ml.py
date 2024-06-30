@@ -10,7 +10,7 @@ from pages.login_page import LoginPage
 @allure.description('Сквозной кейс для блока Предиктивной аналитики. Проверяет функциональность'
                     ' создания эксперимента, модели, запуска модели с определенными шагами. В кейсе'
                     ' используется классический алгоритм машинного обучения.')
-@allure.epic('ML')
+@allure.epic('UI-tests')
 @allure.feature('E2E')
 @allure.story('E2E with ML algorithm')
 class TestE2EMLAlgorithm:
