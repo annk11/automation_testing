@@ -17,8 +17,8 @@
 							"script": {
 								"exec": [
 									"// @allure.label.severity=critical\r",
-									"// @allure.label.epic=ML\r",
-									"// @allure.label.feature=Experiments\r",
+									"// @allure.label.epic=API tests\r",
+									"// @allure.label.feature=ML\r",
 									"// @allure.label.story=Experiments\r",
 									"\r",
 									"pm.test(\"Status code is 201\", function () {\r",
@@ -131,6 +131,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic=API tests\r",
+									"// @allure.label.feature=ML\r",
+									"// @allure.label.story=Models\r",
 									"pm.test(\"Status code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
@@ -230,6 +234,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic=API tests\r",
+									"// @allure.label.feature=ML\r",
+									"// @allure.label.story=Models\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -274,6 +282,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic=API tests\r",
+									"// @allure.label.feature=ML\r",
+									"// @allure.label.story=Experiments\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"

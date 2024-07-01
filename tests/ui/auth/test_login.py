@@ -7,7 +7,7 @@ from pages.login_page import LoginPage
 
 @allure.severity('CRITICAL')
 @allure.description('Проверка функциональности входа пользователя в систему.')
-@allure.epic('UI-tests')
+@allure.epic('UI tests')
 @allure.feature('Authorization')
 @allure.story('Login Page')
 class TestLoginPage:

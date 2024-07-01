@@ -8,7 +8,7 @@ from pages.login_page import LoginPage
 
 @allure.severity('CRITICAL')
 @allure.description('Кейс проверяет функциональность создания, редактирования и удаления эксперимента')
-@allure.epic('UI-tests')
+@allure.epic('UI tests')
 @allure.feature('ML')
 @allure.story('Experiments')
 class TestExperiments:

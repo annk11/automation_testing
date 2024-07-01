@@ -9,7 +9,7 @@ from pages.logout_page import LogoutPage
 
 @allure.severity('CRITICAL')
 @allure.description('Проверка функциональности выхода пользователя из системы.')
-@allure.epic('UI-tests')
+@allure.epic('UI tests')
 @allure.feature('Authorization')
 @allure.story('Logout Page')
 class TestLogoutPage:
