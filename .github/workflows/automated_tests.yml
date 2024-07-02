@@ -146,7 +146,7 @@ jobs:
     name: Send telegram notification
     env:
       TELEGRAM_TOKEN: 7237289603:AAHPEonoSHxzvygLlXqFL-jT3N-PnPmlJ-E
-      TELEGRAM_TO: 531912826
+      TELEGRAM_TO: 531912826, 1002189414551
     steps:
       - uses: appleboy/telegram-action@master
         with:
