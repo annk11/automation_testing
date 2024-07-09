@@ -9,7 +9,7 @@ from pages.login_page import LoginPage
 @allure.severity('NORMAL')
 @allure.description('Сквозной кейс для блока Предиктивной аналитики. Проверяет функциональность'
                     ' создания группы доступа для ML-инженеров и добавляет туда шаблон и эксперимент.')
-@allure.epic('UI-tests')
+@allure.epic('UI tests')
 @allure.feature('E2E')
 @allure.story('Access groups for ML experiment/pattern')
 class TestE2EAccessGroups:

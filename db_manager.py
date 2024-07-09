@@ -8,64 +8,63 @@ conn = psycopg2.connect(
     dbname="ml_result",
     user="postgres",
     password="postgres",
-    host="bi-dev-01",
+    host="bi-demo-01",
     port="5447"
 )
 
-def parse_json_data(json_file):
-    with open(json_file, 'r') as file:
-        data = json.load(file)
+report_path = "."
+half_name = 'newman'
+newman_report = max(glob.glob(os.path.join(report_path, f'*{half_name}*.json')), key=os.path.getctime)
+allure_report = max(glob.glob(os.path.join(f'{report_path}/allure-report/widgets', 'summary.json')))
 
-    tests_total = data["run"]["stats"]["tests"]["total"]
-    tests_pending = data["run"]["stats"]["tests"]["pending"]
-    tests_failed = data["run"]["stats"]["tests"]["failed"]
-    assertions_total = data["run"]["stats"]["assertions"]["total"]
-    assertions_pending = data["run"]["stats"]["assertions"]["pending"]
-    assertions_failed = data["run"]["stats"]["assertions"]["failed"]
+with open(newman_report, 'r') as file:
+    data = json.load(file)
 
-    return (tests_total, tests_pending, tests_failed, assertions_total, assertions_pending,
-            assertions_failed)
+    api_tests_total = data["run"]["stats"]["tests"]["total"]
+    api_tests_pending = data["run"]["stats"]["tests"]["pending"]
+    api_tests_failed = data["run"]["stats"]["tests"]["failed"]
+    api_tests_passed = api_tests_total - api_tests_pending - api_tests_failed
+    api_assertions_total = data["run"]["stats"]["assertions"]["total"]
+    api_assertions_pending = data["run"]["stats"]["assertions"]["pending"]
+    api_assertions_failed = data["run"]["stats"]["assertions"]["failed"]
+    api_assertions_passed = api_assertions_total - api_assertions_pending - api_assertions_failed
 
+with open(allure_report, 'r') as file:
+    data = json.load(file)
 
-def create_allure_report_table(conn):
-    cursor = conn.cursor()
+    ui_tests_total = data["statistic"]["total"]
+    ui_tests_broken = data["statistic"]["broken"]
+    ui_tests_failed = data["statistic"]["failed"]
+    ui_tests_passed = data["statistic"]["passed"]
+    ui_tests_unknown = data["statistic"]["unknown"]
+    ui_tests_skipped = data["statistic"]["skipped"]
+
+with conn.cursor() as cursor:
     cursor.execute('''CREATE TABLE IF NOT EXISTS allure_report (
                         id SERIAL PRIMARY KEY,
                         date TIMESTAMP,
-                        tests_total INTEGER,
-                        tests_pending INTEGER,
-                        tests_failed INTEGER,
-                        assertions_total INTEGER,
-                        assertions_pending INTEGER,
-                        assertions_failed INTEGER
+                        metric_name VARCHAR(50),
+                        total INTEGER,
+                        pending INTEGER,
+                        failed INTEGER,
+                        broken INTEGER,
+                        passed INTEGER,
+                        unknown INTEGER,
+                        skipped INTEGER
                     )''')
-    conn.commit()
 
-def insert_data_to_allure_report(conn, tests_total, tests_pending, tests_failed, assertions_total,
-                                 assertions_pending, assertions_failed):
-    cursor = conn.cursor()
-    date = datetime.now()
-    cursor.execute('''INSERT INTO allure_report (date, tests_total, tests_pending, tests_failed, assertions_total, 
-    assertions_pending, assertions_failed) VALUES (%s, %s, %s, %s, %s, %s, %s)''', (date,) + (tests_total,
-                                                                                              tests_pending,
-                                                                                              tests_failed,
-                                                                                              assertions_total,
-                                                                                              assertions_pending,
-                                                                                              assertions_failed))
-    conn.commit()
+date = datetime.now()
+with conn.cursor() as cursor:
+    cursor.execute('''INSERT INTO allure_report (date, metric_name, total, pending, failed, broken, passed, 
+    unknown, skipped) 
+                      VALUES 
+                      (CURRENT_TIMESTAMP, 'api_tests', %s, %s, %s, 0, %s, 0, 0),
+                      (CURRENT_TIMESTAMP, 'api_assertions', %s, %s, %s, 0, %s, 0, 0),
+                      (CURRENT_TIMESTAMP, 'ui_tests', %s, 0, %s, %s, %s, %s, %s)''',
+                   (api_tests_total, api_tests_pending, api_tests_failed, api_tests_passed,
+                    api_assertions_total, api_assertions_pending, api_assertions_failed, api_assertions_passed,
+                    ui_tests_total, ui_tests_failed, ui_tests_broken, ui_tests_passed, ui_tests_unknown,
+                    ui_tests_skipped))
 
-# Parse json report
-report_path = "."
-half_name = 'newman'
-json_file = max(glob.glob(os.path.join(report_path, f'*{half_name}*.json')), key=os.path.getctime)
-
-(tests_total, tests_pending, tests_failed, assertions_total, assertions_pending,
- assertions_failed) = parse_json_data(json_file)
-
-# Save data
-create_allure_report_table(conn)
-
-insert_data_to_allure_report(conn, tests_total, tests_pending, tests_failed, assertions_total,
-                             assertions_pending, assertions_failed)
-
+conn.commit()
 conn.close()
