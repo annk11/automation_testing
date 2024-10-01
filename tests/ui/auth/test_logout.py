@@ -1,5 +1,4 @@
 import allure
-from playwright.sync_api import Page
 
 from data.data import UserData
 from pages.home_page import HomePage
