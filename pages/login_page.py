@@ -1,8 +1,8 @@
-from playwright.sync_api import expect
-
-from data.data import UserData
 from pages.base_page import BasePage
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class LoginPage(BasePage):
     """
@@ -10,7 +10,8 @@ class LoginPage(BasePage):
     страницу входа в систему. Содержит методы для входа в систему и проверку
     статуса входа.
     """
-    url = "http://bi-tst-01:8082/login"
+    gateway_url = os.getenv('GATEWAY_URL')
+    url = f"http://{gateway_url}/login"
 
     def get_title(self): #TODO add to login test
         """

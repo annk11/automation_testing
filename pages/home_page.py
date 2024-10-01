@@ -2,17 +2,21 @@ from playwright.sync_api import expect
 
 from data.data import UserData
 from pages.base_page import BasePage
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class HomePage(BasePage):
-    url = 'http://bi-tst-01:8082/security/users'
+    gateway_url = os.getenv('GATEWAY_URL')
+    url = f'http://{gateway_url}/security/users'
 
     def check_home_page(self):
         """
         Проверяет доступность 'Домашней страницы'.
         """
         self.page.get_by_role("main")
-        text = self.page.get_by_text("Пользователи")
+        text = self.page.get_by_text("Пользователи").first
         expect(text).to_be_visible()
 
     def check_menu_availability(self):

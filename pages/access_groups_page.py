@@ -1,11 +1,14 @@
 from playwright.sync_api import expect
-
 from data.data import UserData, DataGenerator
 from pages.base_page import BasePage
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class AccessGroupsPage(BasePage):
-    url = 'http://bi-tst-01:8082/security/groups'
+    gateway_url = os.getenv('GATEWAY_URL')
+    url = f'http://{gateway_url}/security/groups'
 
     def create_access_group(self):
         """

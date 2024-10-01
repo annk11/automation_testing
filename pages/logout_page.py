@@ -1,14 +1,17 @@
 from playwright.sync_api import expect
-
 from pages.base_page import BasePage
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class LogoutPage(BasePage):
     """
     Класс LogoutPage наследует от базового класса BasePage и представляет собой
     страницу выхода из системы. Содержит методы для выходв из системы.
     """
-    url = "http://bi-tst-01:8082/login"
+    gateway_url = os.getenv('GATEWAY_URL')
+    url = f"http://{gateway_url}/login"
 
     def get_title(self): #TODO add to login test
         """
