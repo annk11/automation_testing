@@ -5,15 +5,18 @@ from pages.experiment_page import ExperimentPage
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
 
-
-@allure.severity('CRITICAL')
-@allure.description('Сквозной кейс для блока Предиктивной аналитики. Проверяет функциональность'
-                    ' создания эксперимента, модели, запуска модели с определенными шагами. В кейсе'
-                    ' используется классический алгоритм машинного обучения.')
-@allure.epic('UI tests')
+@allure.epic('UI')
 @allure.feature('E2E')
-@allure.story('E2E with ML algorithm')
+@allure.story('Сквозные кейсы ML')
+# @allure.link("https://yt.omegafuture.ru/issue/OBI-31", name="OBI-31")
+# @allure.testcase("https://yt.omegafuture.ru/issue/OBI-31", name="TC-001")
+@allure.description('Сквозные кейсы для блока Предиктивной аналитики. Проверяют функциональность'
+                    ' создания эксперимента, модели, запуска модели с определенными шагами. В кейсах'
+                    ' используются классический алгоритм машинного обучения и нейронные сети.')
+@allure.tag("Предиктивная аналитика", "БФС", "E2E")
+@allure.severity(allure.severity_level.CRITICAL)
 class TestE2EMLAlgorithm:
+    @allure.title("Кейс с использованием классического алгоритма")
     def test_e2e_ml(self, page):
         login_page = LoginPage(page)
         home_page = HomePage(page)

@@ -6,12 +6,16 @@ from pages.home_page import HomePage
 from pages.login_page import LoginPage
 
 
-@allure.severity('CRITICAL')
-@allure.description('Кейс проверяет функциональность создания, редактирования и удаления эксперимента')
-@allure.epic('UI tests')
-@allure.feature('ML')
-@allure.story('Experiments')
+@allure.epic('UI')
+@allure.feature('Предиктивная аналитика')
+@allure.story('Эксперименты')
+@allure.link("https://yt.omegafuture.ru/issue/OBI-51", name="OBI-51")
+# @allure.testcase("https://yt.omegafuture.ru/issue/OBI-51", name="TC-001")
+@allure.description('Проверка функциональности создания, редактирования и удаления ML-эксперимента.')
+@allure.tag("Предиктивная аналитика", "БФС")
+@allure.severity(allure.severity_level.CRITICAL)
 class TestExperiments:
+    @allure.title("Создание, редактирование, удаление эксперимента")
     def test_experiments(self, page):
         login_page = LoginPage(page)
         home_page = HomePage(page)

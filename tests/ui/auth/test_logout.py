@@ -6,12 +6,16 @@ from pages.login_page import LoginPage
 from pages.logout_page import LogoutPage
 
 
-@allure.severity('CRITICAL')
+@allure.epic('UI')
+@allure.feature('Авторизация')
+@allure.story('Выход из системы')
+@allure.link("https://yt.omegafuture.ru/issue/OBI-1973", name="OBI-1973")
+@allure.testcase("https://yt.omegafuture.ru/issue/OBI-1973", name="TC-001")
 @allure.description('Проверка функциональности выхода пользователя из системы.')
-@allure.epic('UI tests')
-@allure.feature('Authorization')
-@allure.story('Logout Page')
+@allure.tag("Авторизация", "БФС")
+@allure.severity(allure.severity_level.CRITICAL)
 class TestLogoutPage:
+    @allure.title("Выход из системы")
     def test_logout(self, page):
         login_page = LoginPage(page)
         logout_page = LogoutPage(page)

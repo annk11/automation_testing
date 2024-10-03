@@ -45,7 +45,7 @@ class ExperimentPage(BasePage):
         self.page.get_by_text("Редактировать").click()
         self.page.get_by_label("Наименование").fill(DataGenerator.name)
         self.page.get_by_label("Описание").fill(DataGenerator.description)
-        self.page.get_by_role("button", name="Создать").click()
+        self.page.get_by_role("button", name="Сохранить").click()
 
     def delete_last_experiment(self):
         self.page.locator("div:last-child > .index_wrapper_M6fL4 > .index_panel_svWK0 > .q-btn").click()
@@ -53,14 +53,14 @@ class ExperimentPage(BasePage):
         self.page.get_by_role("button", name="Удалить").click()
 
     def check_experiment_deleted(self):
-        expect(self.page.get_by_role("alert")).to_contain_text("Эксперимент успешно удален")
+        expect(self.page.get_by_role("alert").nth(1)).to_contain_text("Эксперимент успешно удален")
 
     def check_page_runs_of_experiments(self):
         expect(self.page.get_by_role("main")).to_contain_text("Полный список запусков по всем моделям "
                                                               "эксперимента")
 
     def create_model(self):
-        self.page.get_by_role("main").locator("button").click()
+        self.page.get_by_role("main").locator("button").nth(2).click()
         expect(self.page.get_by_text("Добавить модель")).to_be_visible()
         self.page.get_by_label("Наименование", exact=True).click()
         self.page.get_by_label("Наименование", exact=True).fill(DataGenerator.name)
@@ -126,7 +126,8 @@ class ExperimentPage(BasePage):
         self.page.locator(".index_wrapper_YHBfX > button").first.click()
         self.page.get_by_label("Описание").click()
         self.page.get_by_label("Описание").fill(DataGenerator.description)
-        self.page.get_by_text("2Параметры").click()
+        self.page.get_by_text("2Параметры").nth(1).click()
+        # self.page.get_by_role("button", name="Далее").click()
         self.page.get_by_label("Объем валидационной выборки").click()
         self.page.get_by_label("Объем валидационной выборки").fill("0.2")
         self.page.locator(
@@ -187,3 +188,29 @@ class ExperimentPage(BasePage):
         self.page.locator("div:last-child > .index_wrapper_M6fL4 > .index_panel_svWK0 > .q-btn").click()
         self.page.get_by_text("Удалить").click()
         self.page.get_by_role("button", name="Удалить").click()
+
+
+def calculate_margin(profit, revenue):
+    """Функция для расчета маржинальности."""
+    if revenue == 0:
+        return 0  # Избегаем деления на ноль
+    return (profit / revenue) * 100
+
+
+def linear_regression(x, y):
+    """Реализация линейной регрессии с нуля."""
+    n = len(x)
+
+    # Вычисление средних значений
+    x_mean = np.mean(x)
+    y_mean = np.mean(y)
+
+    # Вычисление коэффициента b
+    b_numerator = np.sum(x * y) - n * x_mean * y_mean
+    b_denominator = np.sum(x ** 2) - n * x_mean ** 2
+    b = b_numerator / b_denominator
+
+    # Вычисление коэффициента a
+    a = y_mean - b * x_mean
+
+    return a, b

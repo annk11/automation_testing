@@ -16,12 +16,17 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-@allure.severity('CRITICAL')
+
+@allure.epic('UI')
+@allure.feature('Авторизация')
+@allure.story('Вход в систему')
+@allure.link("https://yt.omegafuture.ru/issue/OBI-1973", name="OBI-1973")
+@allure.testcase("https://yt.omegafuture.ru/issue/OBI-1973", name="TC-001")
 @allure.description('Проверка функциональности входа пользователя в систему.')
-@allure.epic('UI tests')
-@allure.feature('Authorization')
-@allure.story('Login Page')
+@allure.tag("Авторизация", "БФС")
+@allure.severity(allure.severity_level.CRITICAL)
 class TestLoginPage:
+    @allure.title("Вход в систему")
     def test_login(self, page):
         login_page = LoginPage(page)
         home_page = HomePage(page)
