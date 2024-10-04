@@ -23,6 +23,8 @@
 									"// @allure.label.suite=Эксперименты\r",
 									"// @allure.label.tag=БФС\r",
 									"// @allure.label.tag=ML\r",
+									"// @allure.link(\"https://yt.omegafuture.ru/issue/OBI-1973\", name=\"OBI-1973\")\r",
+									"// @allure.testcase(\"https://yt.omegafuture.ru/issue/OBI-1973\", name=\"TC-001\")\r",
 									"\r",
 									"pm.test(\"Код состояния - 201\", function () {\r",
 									"         pm.response.to.have.status(201)\r",
