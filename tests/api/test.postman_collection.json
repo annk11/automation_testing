@@ -1,0 +1,661 @@
+{
+	"info": {
+		"_postman_id": "2c1fb5d8-bc26-47b1-8171-d97551b72ffb",
+		"name": "test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30928254"
+	},
+	"item": [
+		{
+			"name": "Experiments Copy 2",
+			"item": [
+				{
+					"name": "Создание эксперимента",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 201\", function () {\r",
+									"         pm.response.to.have.status(201)\r",
+									"     });\r",
+									"\r",
+									"pm.test(\"Тело ответа содержит ожидаемые ключи\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"schema\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"presentation_name\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"description\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"schema\": \"{{experimentSchema}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Обновление эксперимента",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Тело ответа содержит ожидаемые ключи\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\")\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"{{randomString}}\",\r\n    \"guid\": \"{{experimentGuid}}\",\r\n    \"presentation_name\": \"{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Получение списка экспериментов",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 200\", function () {\r",
+									"         pm.response.to.have.status(200)\r",
+									"     });\r",
+									"\r",
+									"pm.test(\"Тело ответа содержит ожидаемые ключи\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"description\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"presentation_name\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"schema\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"user\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+									"\r",
+									"\r",
+									"//Vizualize response\r",
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ef85ffa4;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#ef85ffa4;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Description</th>\r",
+									"        <th>GUID</th>\r",
+									"        <th>Created</th>\r",
+									"        <th>Updated</th>\r",
+									"        <th>User GUID</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>SSO ID</th>\r",
+									"        <th>First Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Short Name</th>\r",
+									"        <th>Schema</th>\r",
+									"        <th>Presentation Name</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.description}}</td>\r",
+									"        <td>{{response.guid}}</td>\r",
+									"        <td>{{response.created}}</td>\r",
+									"        <td>{{response.updated}}</td>\r",
+									"        <td>{{response.user.guid}}</td>\r",
+									"        <td>{{response.user.email}}</td>\r",
+									"        <td>{{response.user.sso_id}}</td>\r",
+									"        <td>{{response.user.first_name}}</td>\r",
+									"        <td>{{response.user.last_name}}</td>\r",
+									"        <td>{{response.user.short_name}}</td>\r",
+									"        <td>{{response.schema}}</td>\r",
+									"        <td>{{response.presentation_name}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG] Получение информации по эксперименту",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 200\", function () {\r",
+									"         pm.response.to.have.status(200)\r",
+									"     });\r",
+									"\r",
+									"pm.test(\"Тело ответа содержит ожидаемые ключи\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"description\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"presentation_name\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"schema\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"user\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+									"\r",
+									"\r",
+									"//Vizualize response\r",
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ef85ffa4;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#ef85ffa4;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Description</th>\r",
+									"        <th>GUID</th>\r",
+									"        <th>Created</th>\r",
+									"        <th>Updated</th>\r",
+									"        <th>User GUID</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>SSO ID</th>\r",
+									"        <th>First Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Short Name</th>\r",
+									"        <th>Schema</th>\r",
+									"        <th>Presentation Name</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.description}}</td>\r",
+									"        <td>{{response.guid}}</td>\r",
+									"        <td>{{response.created}}</td>\r",
+									"        <td>{{response.updated}}</td>\r",
+									"        <td>{{response.user.guid}}</td>\r",
+									"        <td>{{response.user.email}}</td>\r",
+									"        <td>{{response.user.sso_id}}</td>\r",
+									"        <td>{{response.user.first_name}}</td>\r",
+									"        <td>{{response.user.last_name}}</td>\r",
+									"        <td>{{response.user.short_name}}</td>\r",
+									"        <td>{{response.schema}}</td>\r",
+									"        <td>{{response.presentation_name}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments/{{experimentGuid}}",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments",
+								"{{experimentGuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG] Получение списка моделей эксперимента",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 200\", function () {\r",
+									"         pm.response.to.have.status(200)\r",
+									"     });\r",
+									"\r",
+									"pm.test(\"Тело ответа содержит ожидаемые ключи\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"description\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"presentation_name\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"schema\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"user\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+									"\r",
+									"\r",
+									"//Vizualize response\r",
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ef85ffa4;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#ef85ffa4;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Description</th>\r",
+									"        <th>GUID</th>\r",
+									"        <th>Created</th>\r",
+									"        <th>Updated</th>\r",
+									"        <th>User GUID</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>SSO ID</th>\r",
+									"        <th>First Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Short Name</th>\r",
+									"        <th>Schema</th>\r",
+									"        <th>Presentation Name</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.description}}</td>\r",
+									"        <td>{{response.guid}}</td>\r",
+									"        <td>{{response.created}}</td>\r",
+									"        <td>{{response.updated}}</td>\r",
+									"        <td>{{response.user.guid}}</td>\r",
+									"        <td>{{response.user.email}}</td>\r",
+									"        <td>{{response.user.sso_id}}</td>\r",
+									"        <td>{{response.user.first_name}}</td>\r",
+									"        <td>{{response.user.last_name}}</td>\r",
+									"        <td>{{response.user.short_name}}</td>\r",
+									"        <td>{{response.schema}}</td>\r",
+									"        <td>{{response.presentation_name}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments/{{experimentGuid}}/models",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments",
+								"{{experimentGuid}}",
+								"models"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG] Получение списка запусков моделей эксперимента",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 200\", function () {\r",
+									"         pm.response.to.have.status(200)\r",
+									"     });\r",
+									"\r",
+									"pm.test(\"Тело ответа содержит ожидаемые ключи\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"guid\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"description\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"presentation_name\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"schema\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"user\")\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"     pm.collectionVariables.set(\"experimentGuid\", jsonData.guid);\r",
+									"\r",
+									"\r",
+									"//Vizualize response\r",
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ef85ffa4;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#ef85ffa4;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ef85ffa4;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Description</th>\r",
+									"        <th>GUID</th>\r",
+									"        <th>Created</th>\r",
+									"        <th>Updated</th>\r",
+									"        <th>User GUID</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>SSO ID</th>\r",
+									"        <th>First Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Short Name</th>\r",
+									"        <th>Schema</th>\r",
+									"        <th>Presentation Name</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.description}}</td>\r",
+									"        <td>{{response.guid}}</td>\r",
+									"        <td>{{response.created}}</td>\r",
+									"        <td>{{response.updated}}</td>\r",
+									"        <td>{{response.user.guid}}</td>\r",
+									"        <td>{{response.user.email}}</td>\r",
+									"        <td>{{response.user.sso_id}}</td>\r",
+									"        <td>{{response.user.first_name}}</td>\r",
+									"        <td>{{response.user.last_name}}</td>\r",
+									"        <td>{{response.user.short_name}}</td>\r",
+									"        <td>{{response.schema}}</td>\r",
+									"        <td>{{response.presentation_name}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments/{{experimentGuid}}/runs",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments",
+								"{{experimentGuid}}",
+								"runs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление эксперимента",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// @allure.label.severity=critical\r",
+									"// @allure.label.epic={{API}}\r",
+									"// @allure.label.feature={{Предиктивная аналитика}}\r",
+									"// @allure.label.story={{Эксперименты}}\r",
+									"// @allure.label.tag={{БФС}}\r",
+									"// @allure.label.tag={{Предиктивная аналитика}}\r",
+									"\r",
+									"pm.test(\"Код состояния - 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{GATEWAY_URL}}/service-ml-middleware/api/experiments/{{experimentGuid}}",
+							"protocol": "http",
+							"host": [
+								"{{GATEWAY_URL}}"
+							],
+							"path": [
+								"service-ml-middleware",
+								"api",
+								"experiments",
+								"{{experimentGuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "## Техническая постановка\n\n[https://docs.google.com/document/d/1ERsurisBU3UzhIO8SVEYeiXkGOwAVygMlrtDcT1ysGc/edit](https://docs.google.com/document/d/1ERsurisBU3UzhIO8SVEYeiXkGOwAVygMlrtDcT1ysGc/edit)\n\n## Swagger-UI\n\n\\[[http://bi-dev-01:8081/service-ml-middleware/swagger-ui/index.html#/Контроллер](http://bi-dev-01:8081/service-ml-middleware/swagger-ui/index.html#/Контроллер) для работы с Экспериментами./getExperiments\\]([http://bi-dev-01:8081/service-ml-middleware/swagger-ui/index.html#/Контроллер](http://bi-dev-01:8081/service-ml-middleware/swagger-ui/index.html#/Контроллер) для работы с Экспериментами./getExperiments)\n\n## API\n\nОбщие и специализированные методы для работы с шаблонами нейросетей\n\n| **Метод** | **Путь** | **Запрос** | **Ответ** | **Описание** | **Имя привелегии** | **Роль** |\n| --- | --- | --- | --- | --- | --- | --- |\n| GET | /api/experiments |  | Body:List | Запрос списка всех экспериментов | S_ML_GET_EXPERIMENT | ML-инженер |\n| POST | /api/experiments | Body:  <br>CreateExperimentDTO | Body:ViewExperimentDTO | Создание эксперимента | S_ML_CREATE_EXPERIMENT | ML-инженер |\n| PUT | /api/experiments | Body: UpdateExperimentDTO | Body:ViewExperimentDTO | Редактирование эксперимента | S_ML_UPDATE_EXPERIMENT | ML-инженер |\n| GET | /api/experiments/{id} | PathVariable: id - идентификатор эксперимента | Body:ViewExperimentDTO | Запрос эксперимента по его идентификатору | S_ML_GET_EXPERIMENT | ML-инженер |\n| DELETE | /api/experiments/{id} | PathVariable: id - идентификатор эксперимента | Status | Удаление  <br>эксперимента | S_ML_DELETE_EXPERIMENT | ML-инженер |"
+		}
+	]
+}
