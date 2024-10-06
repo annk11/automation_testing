@@ -43,7 +43,7 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Run Postman API tests
-        run: newman run ./tests/api/testing.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 4000
+        run: newman run ./tests/api/test.postman_collection.json -e ./tests/api/test-stand-ml.postman_environment.json --reporters cli,html,json,allure --reporter-html-export . --reporter-json-export . --reporter-allure-export allure-results --delay-request 4000
         continue-on-error: true
 
       - name: Run UI tests
