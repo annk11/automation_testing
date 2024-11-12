@@ -21,6 +21,7 @@
 									"// @allure.label.epic=API\r",
 									"// @allure.label.feature=E2E\r",
 									"// @allure.label.story=MLАлгоритм\r",
+									"// @allure.label.link=yandex.ru\r",
 									"// @allure.label.tag=БФС\r",
 									"// @allure.label.tag=ML\r",
 									"\r",
